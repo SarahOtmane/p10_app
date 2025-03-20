@@ -11,10 +11,20 @@
   "description": "",
   "devDependencies": {
     "@types/express": "^5.0.1",
+    "@types/graphql": "^14.2.3",
     "tslint": "^5.20.1",
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "express": "^4.21.2"
+    "@types/bcrypt": "^5.0.2",
+    "apollo-server": "^3.13.0",
+    "apollo-server-express": "^3.13.0",
+    "bcrypt": "^5.1.1",
+    "express": "^4.21.2",
+    "graphql": "^16.10.0",
+    "pg": "^8.14.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.6",
+    "sequelize-typescript": "^2.1.6"
   }
 }
