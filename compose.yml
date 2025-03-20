@@ -1,0 +1,36 @@
+services:
+  node:
+    build:
+      context: ./
+      dockerfile: docker/node/Dockerfile
+    container_name: node
+    volumes:
+      - ./api:/home/node/app/api
+    ports:
+      - "3000:3000"
+    # depends_on:
+    #   postgres-db:
+    #     condition: service_healthy
+    env_file:
+      - .env
+
+  postgres-db:
+    build:
+      context: ./
+      dockerfile: docker/postgres/Dockerfile
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    # healthcheck:
+    #   test: ["CMD", "pg_isready", "-U", "admin", "testdb"]
+    #   interval: 10s
+    #   retries: 5
+    #   timeout: 5s
+
+volumes:
+  mysql_data:
