@@ -3,21 +3,26 @@ import { sequelize } from '../config/database';
 
 const GP_Pilotes = sequelize.define('GP_Pilotes', {
   id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
+    type: DataTypes.INTEGER,
     primaryKey: true,
-  },
-  id_gp: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
-  id_pilote: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
-  id_ecurie: {
-    type: DataTypes.INTEGER,
     allowNull: false,
+  },
+  season: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true
+  },
+  date: {
+    type: DataTypes.DATEONLY,
+    allowNull: false
+  },
+  time: {
+    type: DataTypes.TIME,
+    allowNull: false
+  },
+  id_api_track: {
+    type: DataTypes.INTEGER, 
+    allowNull: true
   }
 }, {
   tableName: 'gp_pilotes',
