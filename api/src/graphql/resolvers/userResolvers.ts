@@ -1,4 +1,4 @@
-// import User from '../../models/User.model';
+import User from '../../models/user.model';
 import bcrypt from 'bcrypt';
 
 const userResolvers = {
