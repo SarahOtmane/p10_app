@@ -11,7 +11,6 @@ const Avatar = sequelize.define('Avatar', {
   role: {
     type: DataTypes.STRING,
     allowNull: false,
-    defaultValue: 'user',
     unique: true,
   }
 }, {
