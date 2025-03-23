@@ -13,11 +13,11 @@ async function startServer() {
   await server.start();
   server.applyMiddleware({ app });
 
-  await connectDB(); // Connexion à la DB avant de démarrer le serveur
+  await connectDB();
 
   app.listen(port, () => {
-    console.log(`🚀 Serveur Express démarré sur http://localhost:${port}`);
-    console.log(`📡 GraphQL disponible sur http://localhost:${port}${server.graphqlPath}`);
+    console.log(`Serveur Express démarré sur http://localhost:${port}`);
+    console.log(`GraphQL disponible sur http://localhost:${port}${server.graphqlPath}`);
   });
 }
 
