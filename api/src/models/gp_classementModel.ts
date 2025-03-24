@@ -15,11 +15,6 @@ const GP_Classement = sequelize.define('GP_Classement', {
     type: DataTypes.INTEGER,
     allowNull: false
   },
-  isDNF: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    defaultValue: false
-  },
   position: {
     type: DataTypes.INTEGER
   }
@@ -29,5 +24,14 @@ const GP_Classement = sequelize.define('GP_Classement', {
   createdAt: true,
   updatedAt: true
 });
+
+import GP from './gpModel';
+import GP_Pilotes from './gp_pilotesModel';
+
+GP_Classement.belongsTo(GP, { foreignKey: 'id_gp' });
+GP.hasMany(GP_Classement, { foreignKey: 'id_gp' });
+
+GP_Classement.belongsTo(GP_Pilotes, { foreignKey: 'id_gp_pilote' });
+GP_Pilotes.hasMany(GP_Classement, { foreignKey: 'id_gp_pilote' });
 
 export default GP_Classement;

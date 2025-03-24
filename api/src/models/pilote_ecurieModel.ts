@@ -26,4 +26,13 @@ const PilotesEcurie = sequelize.define('PilotesEcurie', {
   updatedAt: true
 });
 
+import Pilotes from './piloteModel';
+import Ecurie from './ecurieModel';
+
+PilotesEcurie.belongsTo(Pilotes, { foreignKey: 'id_pilote' });
+Pilotes.hasMany(PilotesEcurie, { foreignKey: 'id_pilote' });
+
+PilotesEcurie.belongsTo(Ecurie, { foreignKey: 'id_ecurie' });
+Ecurie.hasMany(PilotesEcurie, { foreignKey: 'id_ecurie' });
+
 export default PilotesEcurie;

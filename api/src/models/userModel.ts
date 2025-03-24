@@ -39,4 +39,22 @@ const User = sequelize.define('User', {
   underscored: true
 });
 
+import Avatar from './avatarModel';
+import League from './leagueModel';
+import UserLeague from './user_leagueModel';
+
+User.belongsTo(Avatar, { foreignKey: 'id_avatar' });
+Avatar.hasMany(User, { foreignKey: 'id_avatar' });
+
+User.belongsToMany(League, {
+  through: UserLeague,
+  foreignKey: 'id_user',
+  otherKey: 'id_league',
+});
+League.belongsToMany(User, {
+  through: UserLeague,
+  foreignKey: 'id_league',
+  otherKey: 'id_user',
+});
+
 export default User;

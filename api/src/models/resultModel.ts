@@ -30,4 +30,17 @@ const Results = sequelize.define('Results', {
   updatedAt: true
 });
 
+import User from './userModel';
+import GP from './gpModel';
+import Pilotes from './piloteModel';
+
+Results.belongsTo(User, { foreignKey: 'id_user' });
+User.hasMany(Results, { foreignKey: 'id_user' });
+
+Results.belongsTo(GP, { foreignKey: 'id_gp' });
+GP.hasMany(Results, { foreignKey: 'id_gp' });
+
+Results.belongsTo(Pilotes, { foreignKey: 'id_pilote_p10' });
+Pilotes.hasMany(Results, { foreignKey: 'id_pilote_p10' });
+
 export default Results;
