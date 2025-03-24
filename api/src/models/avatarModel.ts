@@ -8,10 +8,10 @@ const Avatar = sequelize.define('Avatar', {
     defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
   },
-  role: {
+  picture_avatar: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
+    unique: true
   }
 }, {
   tableName: 'avatars',
