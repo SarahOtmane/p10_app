@@ -3,8 +3,8 @@ import { sequelize } from '../config/database';
 
 const User = sequelize.define('User', {
   id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
     primaryKey: true,
   },
   email: {
@@ -30,11 +30,31 @@ const User = sequelize.define('User', {
     defaultValue: 'user',
   },
   id_avatar: {
-    type: DataTypes.UUID,
+    type: DataTypes.INTEGER,
     allowNull: true,
   }
 }, {
+  tableName: 'users',
   timestamps: true,
+  underscored: true
+});
+
+import Avatar from './avatarModel';
+import League from './leagueModel';
+import UserLeague from './user_leagueModel';
+
+User.belongsTo(Avatar, { foreignKey: 'id_avatar' });
+Avatar.hasMany(User, { foreignKey: 'id_avatar' });
+
+User.belongsToMany(League, {
+  through: UserLeague,
+  foreignKey: 'id_user',
+  otherKey: 'id_league',
+});
+League.belongsToMany(User, {
+  through: UserLeague,
+  foreignKey: 'id_league',
+  otherKey: 'id_user',
 });
 
 export default User;
