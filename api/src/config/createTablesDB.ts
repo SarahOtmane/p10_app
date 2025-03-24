@@ -26,6 +26,8 @@ class TableManager {
             await UserLeague.sync({ alter: true, force: false });
             await User.sync({ alter: true, force: false });
             await Results.sync({ alter: true, force: false });
+
+            console.log("Tables créées avec succès !");
         } catch (error) {
             console.error("Erreur lors de la création des tables :", error);
         }
