@@ -3,8 +3,8 @@ import { sequelize } from '../config/database';
 
 const GP_Pilotes = sequelize.define('GP_Pilotes', {
   id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
     primaryKey: true,
   },
   id_gp: {

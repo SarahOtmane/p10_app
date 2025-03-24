@@ -3,8 +3,8 @@ import { sequelize } from '../config/database';
 
 const UserLeague = sequelize.define('UserLeague', {
   id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
     primaryKey: true,
   },
   role: {

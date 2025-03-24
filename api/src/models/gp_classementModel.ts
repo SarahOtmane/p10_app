@@ -3,8 +3,8 @@ import { sequelize } from '../config/database';
 
 const GP_Classement = sequelize.define('GP_Classement', {
   id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
     primaryKey: true,
   },
   id_gp: {

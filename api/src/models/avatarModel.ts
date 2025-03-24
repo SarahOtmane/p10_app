@@ -4,8 +4,8 @@ import fs from 'fs-extra';
 
 const Avatar = sequelize.define('Avatar', {
   id_avatar: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
     primaryKey: true,
   },
   picture_avatar: {

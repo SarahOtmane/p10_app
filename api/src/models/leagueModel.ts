@@ -11,8 +11,8 @@ interface LeagueAttributes {
 
 const League = sequelize.define<Model<LeagueAttributes>>('League', {
   id_league: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
     primaryKey: true,
   },
   name: {
