@@ -1,8 +1,17 @@
 import { mergeResolvers, mergeTypeDefs } from '@graphql-tools/merge';
+
 import userTypeDefs from './schemas/userSchema';
 import userResolvers from './resolvers/userResolvers';
 
-const typeDefs = mergeTypeDefs([userTypeDefs]);
-const resolvers = mergeResolvers([userResolvers]);
+import { avatarTypeDefs } from './schemas/avatarSchema';
+import { avatarResolvers } from './resolvers/avatarResolver';
 
-export { typeDefs, resolvers };
+export const typeDefs = mergeTypeDefs([
+  userTypeDefs,
+  avatarTypeDefs
+]);
+
+export const resolvers = mergeResolvers([
+  userResolvers,
+  avatarResolvers
+]);
