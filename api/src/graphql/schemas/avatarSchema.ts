@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server-express';
 
-export const avatarTypeDefs = gql`
+const avatarTypeDefs = gql`
   type Avatar {
     id_avatar: ID!
     picture_avatar: String!
@@ -17,3 +17,5 @@ export const avatarTypeDefs = gql`
     replaceUserAvatar(id_avatar: ID!): String
   }
 `;
+
+export default avatarTypeDefs;

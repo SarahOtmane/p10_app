@@ -3,7 +3,7 @@ import User from '../../models/userModel';
 import { MyContext } from '../../types/context';
 import { IResolvers } from '@graphql-tools/utils';
 
-export const avatarResolvers: IResolvers = {
+const avatarResolvers: IResolvers = {
   Query: {
     getAllAvatars: async () => {
       try {
@@ -18,12 +18,12 @@ export const avatarResolvers: IResolvers = {
     addAvatar: async (
       _: any,
       { picture_avatar }: { picture_avatar: string },
-      context: MyContext
+      // context: MyContext
     ) => {
-      const user = context.req.user;
-      if (!user || user.role !== 'admin') {
-        throw new Error("Accès interdit : administrateur requis");
-      }
+      // const user = context.req.user;
+      // if (!user || user.role !== 'admin') {
+      //   throw new Error("Accès interdit : administrateur requis");
+      // }
 
       try {
         await Avatar.create({ picture_avatar });
@@ -95,3 +95,5 @@ export const avatarResolvers: IResolvers = {
     },
   },
 };
+
+export default avatarResolvers;
