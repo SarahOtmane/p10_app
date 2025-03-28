@@ -1,14 +1,12 @@
 import { Request, Response } from 'express';
 
-interface MyContext {
+export interface MyContext {
   req: Request & {
     user?: {
       id_user: number;
       role: string;
-      [key: string]: any;
+      email?: string;
     };
   };
   res: Response;
 }
-
-export { MyContext };
