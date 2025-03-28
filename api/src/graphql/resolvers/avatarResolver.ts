@@ -4,6 +4,7 @@ import { MyContext } from '../../types/context';
 import { IResolvers } from '@graphql-tools/utils';
 import fs from 'fs-extra';
 import path from 'path';
+import { requireAdmin } from '../../utils/auth';
 
 const avatarResolvers: IResolvers = {
   Query: {
@@ -20,8 +21,10 @@ const avatarResolvers: IResolvers = {
     addAvatar: async (
       _: any,
       { filename, base64Image }: { filename: string; base64Image: string },
-      context: MyContext
+      context
     ) => {
+      requireAdmin(context);
+      
       try {
         const imageBuffer = Buffer.from(
           base64Image.replace(/^data:image\/\w+;base64,/, ''),
@@ -51,12 +54,9 @@ const avatarResolvers: IResolvers = {
     updateAvatar: async (
       _: any,
       { id_avatar, picture_avatar }: { id_avatar: number; picture_avatar: string },
-      context: MyContext
+      context
     ) => {
-      // const user = context.req.user;
-      // if (!user || user.role !== 'admin') {
-      //   throw new Error("Accès interdit : administrateur requis");
-      // }
+      requireAdmin(context);
 
       try {
         const existing = await Avatar.findByPk(id_avatar);
@@ -72,12 +72,9 @@ const avatarResolvers: IResolvers = {
     deleteAvatar: async (
       _: any,
       { id_avatar }: { id_avatar: number },
-      context: MyContext
+      context
     ) => {
-      // const user = context.req.user;
-      // if (!user || user.role !== 'admin') {
-      //   throw new Error("Accès interdit : administrateur requis");
-      // }
+      requireAdmin(context);
 
       try {
         const existing = await Avatar.findByPk(id_avatar);
