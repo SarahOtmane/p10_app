@@ -2,9 +2,8 @@ import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { connectDB } from './config/database';
 import { typeDefs, resolvers } from './graphql';
-import TableManager from './config/createTablesDB';
-import jwtMiddleware from './middlewares/jwtMiddleware';
-import { MyContext } from './types/context';
+import TableManager from './config/tableManager';
+import path from 'path';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -12,8 +11,8 @@ const port = process.env.PORT || 3000;
 // JSON body parser
 app.use(express.json());
 
-// Middleware JWT global (ajoute req.user si token valide)
-app.use(jwtMiddleware.verifyToken);
+// pour que le front puisse acceder au dossier images
+app.use('/images', express.static(path.join(__dirname, '../public/images')));
 
 // Apollo Server avec context pour injecter req/res
 const server = new ApolloServer({

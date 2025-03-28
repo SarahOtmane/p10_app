@@ -2,6 +2,8 @@ import Avatar from '../../models/avatarModel';
 import User from '../../models/userModel';
 import { MyContext } from '../../types/context';
 import { IResolvers } from '@graphql-tools/utils';
+import fs from 'fs-extra';
+import path from 'path';
 
 const avatarResolvers: IResolvers = {
   Query: {
@@ -17,31 +19,44 @@ const avatarResolvers: IResolvers = {
   Mutation: {
     addAvatar: async (
       _: any,
-      { picture_avatar }: { picture_avatar: string },
-      // context: MyContext
+      { filename, base64Image }: { filename: string; base64Image: string },
+      context: MyContext
     ) => {
-      // const user = context.req.user;
-      // if (!user || user.role !== 'admin') {
-      //   throw new Error("Accès interdit : administrateur requis");
-      // }
-
       try {
-        await Avatar.create({ picture_avatar });
-        return "Avatar ajouté";
+        const imageBuffer = Buffer.from(
+          base64Image.replace(/^data:image\/\w+;base64,/, ''),
+          'base64'
+        );
+    
+        const uploadDir = path.join(__dirname, '../../public/images');
+    
+        // Créer le dossier si nécessaire
+        await fs.ensureDir(uploadDir);
+    
+        const imagePath = path.join(uploadDir, filename);
+    
+        // Sauvegarder l'image physiquement
+        await fs.writeFile(imagePath, imageBuffer);
+    
+        // Enregistrer dans la BDD
+        await Avatar.create({ picture_avatar: filename });
+    
+        return "Avatar ajouté avec succès";
       } catch (error) {
+        console.error("Erreur lors de l'ajout de l'avatar :", error);
         throw new Error("Erreur lors du traitement des données");
       }
-    },
+    },    
 
     updateAvatar: async (
       _: any,
       { id_avatar, picture_avatar }: { id_avatar: number; picture_avatar: string },
       context: MyContext
     ) => {
-      const user = context.req.user;
-      if (!user || user.role !== 'admin') {
-        throw new Error("Accès interdit : administrateur requis");
-      }
+      // const user = context.req.user;
+      // if (!user || user.role !== 'admin') {
+      //   throw new Error("Accès interdit : administrateur requis");
+      // }
 
       try {
         const existing = await Avatar.findByPk(id_avatar);
@@ -59,10 +74,10 @@ const avatarResolvers: IResolvers = {
       { id_avatar }: { id_avatar: number },
       context: MyContext
     ) => {
-      const user = context.req.user;
-      if (!user || user.role !== 'admin') {
-        throw new Error("Accès interdit : administrateur requis");
-      }
+      // const user = context.req.user;
+      // if (!user || user.role !== 'admin') {
+      //   throw new Error("Accès interdit : administrateur requis");
+      // }
 
       try {
         const existing = await Avatar.findByPk(id_avatar);

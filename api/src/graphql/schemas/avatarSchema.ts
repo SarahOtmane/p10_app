@@ -11,7 +11,7 @@ const avatarTypeDefs = gql`
   }
 
   type Mutation {
-    addAvatar(picture_avatar: String!): String
+    addAvatar(filename: String!, base64Image: String!): String
     updateAvatar(id_avatar: ID!, picture_avatar: String!): String
     deleteAvatar(id_avatar: ID!): String
     replaceUserAvatar(id_avatar: ID!): String
