@@ -24,9 +24,11 @@ const server = new ApolloServer({
     const authHeader = req.headers['authorization'];
 
     if (authHeader) {
+      const token = authHeader.split(' ')[1];
+
       try {
         const payload = await new Promise((resolve, reject) => {
-          jwt.verify(authHeader, process.env.JWT_KEY as string, (err, decoded) => {
+          jwt.verify(token, process.env.JWT_KEY as string, (err, decoded) => {
             if (err) reject(err);
             else resolve(decoded);
           });

@@ -80,7 +80,7 @@ const userResolvers = {
 
       const token = jwt.sign(userData, process.env.JWT_KEY as string, { expiresIn: '30d' });
 
-      return {token};
+      return token;
     },
 
     updateUser: async (
