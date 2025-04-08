@@ -34,7 +34,7 @@ async function synchroAvatar() {
                     continue;
                 } 
               
-                  await Avatar.create({ picture_avatar: file });
+                await Avatar.create({ picture_avatar: file });
             }
         }
     }   catch (error) {
@@ -45,7 +45,6 @@ async function synchroAvatar() {
 class TableManager {
     async createTables() {
         try {
-            await synchroAvatar();
             await Avatar.sync({ alter: true, force: false });
             await Ecurie.sync({ alter: true, force: false });
             await Tracks.sync({ alter: true, force: false });
@@ -58,6 +57,8 @@ class TableManager {
             await UserLeague.sync({ alter: true, force: false });
             await User.sync({ alter: true, force: false });
             await Results.sync({ alter: true, force: false });
+
+            await synchroAvatar();
 
             console.log("Tables créées avec succès !");
         } catch (error) {
