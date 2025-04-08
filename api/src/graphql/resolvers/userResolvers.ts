@@ -73,7 +73,7 @@ const userResolvers = {
       }
 
       const userData = {
-        id_user: user.getDataValue('id_user'),
+        id_user: user.getDataValue('id'),
         email: user.getDataValue('email'),
         role: user.getDataValue('role'),
       };
