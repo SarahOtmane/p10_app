@@ -6,12 +6,17 @@ import userResolvers from './resolvers/userResolvers';
 import avatarTypeDefs from './schemas/avatarSchema';
 import avatarResolvers from './resolvers/avatarResolver';
 
+import leagueTypeDefs from './schemas/leagueSchema';
+import leagueResolvers from './resolvers/leagueResolver';
+
 export const typeDefs = mergeTypeDefs([
   userTypeDefs,
-  avatarTypeDefs
+  avatarTypeDefs,
+  leagueTypeDefs
 ]);
 
 export const resolvers = mergeResolvers([
   userResolvers,
-  avatarResolvers
+  avatarResolvers,
+  leagueResolvers
 ]);
