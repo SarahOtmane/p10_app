@@ -19,7 +19,8 @@ const League = sequelize.define('League', {
     defaultValue: false
   },
   shared_link: {
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
+    unique: true,
   },
   active: {
     type: DataTypes.BOOLEAN,
