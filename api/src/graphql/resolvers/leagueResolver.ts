@@ -40,7 +40,7 @@ const generateUniqueSharedLink = async (): Promise<string> => {
 
 const leagueResolvers: IResolvers = {
 
-    query : {
+    Query : {
         getLeague : async(
             _: any,
             { id_league }: { id_league: number },

@@ -14,7 +14,7 @@ const leagueTypeDefs = gql`
   }
 
   type Mutation {
-    createLeague(name: String!, private: Boolean!): string!
+    createLeague(name: String!, private: Boolean!): String!
     updateLeague(id_league: Int!, private: Boolean!, active: Boolean!): String!
     deleteLeague(id_league: Int!): String!
   }
