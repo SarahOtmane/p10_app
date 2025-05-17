@@ -10,7 +10,9 @@ const leagueTypeDefs = gql`
   }
 
   type Query {
-    getLeague: [League!]!
+    getAllLeagues: [League!]!
+    getAllLeaguesOfUser: [League!]!
+    getLeague(id_league: Int!): League!
   }
 
   type Mutation {

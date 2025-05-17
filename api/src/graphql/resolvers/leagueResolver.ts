@@ -6,6 +6,8 @@ import UserLeague from '../../models/user_leagueModel';
 import User from '../../models/userModel';
 import { MyContext } from '../../types/context';
 
+
+// Fonction pour générer un lien de partage unique
 const generateUniqueSharedLink = async (): Promise<string> => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const linkLength = 7;
@@ -41,6 +43,10 @@ const generateUniqueSharedLink = async (): Promise<string> => {
 const leagueResolvers: IResolvers = {
 
     Query : {
+        /* 
+            Fonction qui permet de récupérer une league par son id
+            si l'utilisateur est authentifié et qu'il fait partie de la league 
+        */
         getLeague : async(
             _: any,
             { id_league }: { id_league: number },
@@ -71,6 +77,57 @@ const leagueResolvers: IResolvers = {
 
             return league;
         },
+
+        /* 
+            Fonction qui permet de récupérer toutes les leagues liées à l'utilisateur connecté 
+        */
+        getAllLeaguesOfUser: async(
+            _: any,
+            context: MyContext
+        ) => {
+            const user = requireAdmin(context);
+            const userId = user.id_user;
+
+            if (!userId) {
+              throw new Error("Utilisateur non authentifié.");
+            }
+        
+            const existingUser = await User.findByPk(userId);
+            if (!existingUser) {
+              throw new Error("Utilisateur non trouvé.");
+            }
+
+            const leagues = await League.findAll({
+                include: {
+                    model: UserLeague,
+                    where: { userId },
+                },
+            });
+
+            return leagues;
+        },
+
+        // fonction qui permet à l'admin de récupérer toutes les leagues
+        getAllLeagues: async(
+            _: any,
+            context: MyContext
+        ) => {
+            const user = requireAuth(context);
+            const userId = user.id_user;
+
+            if (!userId) {
+              throw new Error("Utilisateur non authentifié.");
+            }
+        
+            const existingUser = await User.findByPk(userId);
+            if (!existingUser) {
+              throw new Error("Utilisateur non trouvé.");
+            }
+
+            const leagues = await League.findAll();
+
+            return leagues;
+        }
     },
 
     Mutation: {
@@ -153,7 +210,7 @@ const leagueResolvers: IResolvers = {
         deleteLeague: async (
             _: any,
             { id_league }: { id_league: number },
-            context
+            context: MyContext
         ) => {
             try {
                 const user = requireAuth(context);
@@ -186,6 +243,48 @@ const leagueResolvers: IResolvers = {
                 throw new Error("Error deleating league");
             }
         },
+
+        inviteUserToLeague: async(
+            _: any,
+            { id_league, email }: { id_league: number, email: string },
+            context: MyContext
+        ) => {
+
+            const user = requireAuth(context);
+            const userId = user.id_user;
+
+            if (!userId) {
+              throw new Error("Utilisateur non authentifié.");
+            }
+        
+            const existingUser = await User.findByPk(userId);
+            if (!existingUser) {
+              throw new Error("Utilisateur non trouvé.");
+            }
+
+            const league = await League.findOne({ where: { id_league } });
+            if (!league) throw new Error("La league spécifiée n'existe pas.");
+
+            const userLeague = await UserLeague.findOne({
+                where: { id_user: userId, id_league: league.getDataValue('id_league') },
+            });
+
+            if (!userLeague) {
+                throw new Error("Vous ne faites pas partie de cette league.");
+            }
+
+            const userInvited = await User.findOne({ where: { email } });
+            if (!userInvited) {
+                throw new Error("L'utilisateur n'existe pas.");
+            }
+
+            const userLeagueInvited = await UserLeague.findOne({
+                where: { id_user: userInvited.getDataValue('id_user'), id_league: league.getDataValue('id_league') },
+            });
+            if (userLeagueInvited) {
+                throw new Error("L'utilisateur fait déjà partie de cette league.");
+            }
+        }
     }
 }
 
