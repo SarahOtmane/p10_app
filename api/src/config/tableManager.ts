@@ -13,6 +13,8 @@ import Tracks from "../models/trackModel";
 import UserLeague from "../models/user_leagueModel";
 import User from "../models/userModel";
 
+import '../models/index';
+
 const directoryPath = './public/images';
 
 async function synchroAvatar() {
@@ -54,8 +56,8 @@ class TableManager {
             await GP_Classement.sync({ alter: true, force: false });
             await League.sync({ alter: true, force: false });
             await PilotesEcurie.sync({ alter: true, force: false });
-            await UserLeague.sync({ alter: true, force: false });
             await User.sync({ alter: true, force: false });
+            await UserLeague.sync({ alter: true, force: false });
             await Results.sync({ alter: true, force: false });
 
             await synchroAvatar();
