@@ -7,10 +7,6 @@ const GP_Classement = sequelize.define('GP_Classement', {
     autoIncrement: true,
     primaryKey: true,
   },
-  id_gp: {
-    type: DataTypes.INTEGER,
-    allowNull: false
-  },
   id_gp_pilote: {
     type: DataTypes.INTEGER,
     allowNull: false
