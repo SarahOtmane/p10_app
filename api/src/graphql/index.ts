@@ -14,8 +14,12 @@ import resultTypeDefs from './schemas/resultSchema';
 
 import trackTypeDefs from './schemas/trackSchema';
 import trackResolvers from './resolvers/trackResolver';
+
 import gpTypeDefs from './schemas/gpSchema';
 import gpResolvers from './resolvers/gpResolver';
+
+import piloteTypeDefs from './schemas/piloteSchema';
+import piloteResolvers from './resolvers/piloteResolver';
 
 export const typeDefs = mergeTypeDefs([
   userTypeDefs,
@@ -24,6 +28,7 @@ export const typeDefs = mergeTypeDefs([
   resultTypeDefs,
   trackTypeDefs,
   gpTypeDefs,
+  piloteTypeDefs,
 ]);
 
 export const resolvers = mergeResolvers([
@@ -33,4 +38,5 @@ export const resolvers = mergeResolvers([
   resultResolvers,
   trackResolvers,
   gpResolvers,
+  piloteResolvers,
 ]);
