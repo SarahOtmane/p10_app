@@ -9,14 +9,20 @@ const gpTypeDefs = gql`
     id_api_track: Int
   }
 
+  input UpdateGPInput {
+    id_gp: ID!
+    id_pilote: ID!
+    id_ecurie: ID!
+  }
+
   type Query {
     getAllGPs: [GP!]!
     getGPById(id_api_races: Int!): GP
   }
 
   type Mutation {
-    importGPsFromAPI(year: String!): String!
-    updateGP(input: GP!): GP!
+    importGPsAndTracks(year: String!): String!
+    updateGP(input: UpdateGPInput!): GP!
   }
 `;
 
