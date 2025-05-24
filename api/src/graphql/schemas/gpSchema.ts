@@ -16,7 +16,7 @@ const gpTypeDefs = gql`
 
   type Mutation {
     importGPsFromAPI(year: String!): String!
-    updateGP(input: UpdateGPInput!): GP!
+    updateGP(input: GP!): GP!
   }
 `;
 
