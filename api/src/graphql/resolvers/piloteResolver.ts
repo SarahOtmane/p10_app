@@ -8,6 +8,15 @@ import { requireAdmin } from '../../utils/auth';
 import { IResolvers } from '@graphql-tools/utils';
 
 const piloteResolvers: IResolvers = {
+    Query: {
+        pilotes: async () => {
+            return await Pilote.findAll();
+        },
+        pilote: async (_: any, { id_api_pilotes }: { id_api_pilotes: string }) => {
+            return await Pilote.findByPk(id_api_pilotes);
+    }
+    },
+
     Mutation: {
         importDriversFromOpenF1: async (_: any, __: any, context: any) => {
             const user = requireAdmin(context);
