@@ -48,8 +48,7 @@ const piloteResolvers: IResolvers = {
                     const [pilote] = await Pilote.findOrCreate({
                         where: { name_acronym: driver.name_acronym },
                         defaults: {
-                            name: driver.last_name,
-                            first_name: driver.first_name,
+                            name: driver.full_name,
                             picture: driver.headshot_url,
                             name_acronym: driver.name_acronym,
                         }
