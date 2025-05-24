@@ -2,7 +2,7 @@ import { gql } from 'apollo-server-express';
 
 const avatarTypeDefs = gql`
   type Avatar {
-    id_avatar: ID!
+    id_avatar: Int!
     picture_avatar: String!
   }
 
