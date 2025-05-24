@@ -12,11 +12,15 @@ import leagueResolvers from './resolvers/leagueResolver';
 import resultResolvers from './resolvers/resultResolver';
 import resultTypeDefs from './schemas/resultSchema';
 
+import trackTypeDefs from './schemas/trackSchema';
+import trackResolvers from './resolvers/trackResolver';
+
 export const typeDefs = mergeTypeDefs([
   userTypeDefs,
   avatarTypeDefs,
   leagueTypeDefs,
   resultTypeDefs,
+  trackTypeDefs,
 ]);
 
 export const resolvers = mergeResolvers([
@@ -24,4 +28,5 @@ export const resolvers = mergeResolvers([
   avatarResolvers,
   leagueResolvers,
   resultResolvers,
+  trackResolvers
 ]);
