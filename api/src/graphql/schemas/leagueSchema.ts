@@ -19,6 +19,8 @@ const leagueTypeDefs = gql`
     createLeague(name: String!, private: Boolean!): String!
     updateLeague(id_league: Int!, private: Boolean!, active: Boolean!): String!
     deleteLeague(id_league: Int!): String!
+    inviteUserToLeague(id_league: Int!, email: String!): String!
+    acceptInvitationToLeague(shared_link: String!): String!
   }
 `;
 

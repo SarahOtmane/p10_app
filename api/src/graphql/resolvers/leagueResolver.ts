@@ -5,6 +5,7 @@ import { requireAdmin, requireAuth } from '../../utils/auth';
 import UserLeague from '../../models/user_leagueModel';
 import User from '../../models/userModel';
 import { MyContext } from '../../types/context';
+import { sendInvitationEmail } from '../../utils/mailService';
 
 
 // Fonction pour générer un lien de partage unique
@@ -131,6 +132,9 @@ const leagueResolvers: IResolvers = {
     },
 
     Mutation: {
+
+        //fonction qui permet à l'utilisateur de créer une league 
+        //créer un enreg istrement dans la table UserLeague pour lier l'utilisateur à la league avec le role 'admin'
         createLeague: async (
             _: any,
             { name, isPrivate }: { name: string; isPrivate: boolean;  },
@@ -169,6 +173,7 @@ const leagueResolvers: IResolvers = {
             }
         },
 
+        //fonction qui permet à l'admin de la league de modifier les propriétés : active et isPrivate
         updateLeague: async(
             _: any,
             {id_league, isPrivate, active }: { id_league: number, isPrivate: boolean; active: boolean },
@@ -207,6 +212,7 @@ const leagueResolvers: IResolvers = {
             }
         },
 
+        //fonction qui permet à l'admin de laleague de la supprimer 
         deleteLeague: async (
             _: any,
             { id_league }: { id_league: number },
@@ -244,6 +250,7 @@ const leagueResolvers: IResolvers = {
             }
         },
 
+        //fonction qui permet à un utilisateur de la league à inviter un autre utilisateur à rejoindre la league
         inviteUserToLeague: async(
             _: any,
             { id_league, email }: { id_league: number, email: string },
@@ -284,6 +291,38 @@ const leagueResolvers: IResolvers = {
             if (userLeagueInvited) {
                 throw new Error("L'utilisateur fait déjà partie de cette league.");
             }
+
+            await sendInvitationEmail(email, league.getDataValue('shared_link'))
+ 
+            return 'Invitation envoyée'
+        },
+
+        //fonction qui permet à un utilisateur de rejoindre une league via le shared_link
+        acceptInvitationToLeague: async(
+            _: any,
+            { shared_link }: { shared_link: string },
+            context: MyContext
+        ) =>{
+            const user = requireAuth(context);
+            const userId = user.id_user;
+
+            const league = await League.findOne({ where: { shared_link } });
+            if (!league) throw new Error("League introuvable.");
+
+            const alreadyMember = await UserLeague.findOne({
+              where: { id_user: userId, id_league: league.getDataValue('id_league') },
+            });
+            if (alreadyMember) {
+              throw new Error("Vous êtes déjà membre de cette league.");
+            }
+        
+            await UserLeague.create({
+              role: "user", 
+              id_user: userId,
+              id_league: league.getDataValue('id_league'),
+            });
+        
+            return "Vous avez rejoint la league avec succès.";
         }
     }
 }
