@@ -12,6 +12,10 @@ const Ecurie = sequelize.define('Ecurie', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  short_name: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
   logo: {
     type: DataTypes.STRING,
     allowNull: true,
