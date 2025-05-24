@@ -1,0 +1,31 @@
+import { DataTypes } from 'sequelize';
+import { sequelize } from '../config/database';
+
+const Pilotes = sequelize.define('Pilotes', {
+  id_api_pilotes: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true
+  },
+  picture: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  name_acronym: {
+    type: DataTypes.STRING,
+    allowNull: true
+  }
+}, {
+  tableName: 'pilotes',
+  timestamps: true,
+  createdAt: true,
+  updatedAt: true
+});
+
+export default Pilotes;

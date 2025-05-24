@@ -3,8 +3,8 @@ import { sequelize } from '../config/database';
 
 const User = sequelize.define('User', {
   id: {
-    type: DataTypes.UUID,
-    defaultValue: DataTypes.UUIDV4,
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
     primaryKey: true,
   },
   email: {
@@ -30,11 +30,13 @@ const User = sequelize.define('User', {
     defaultValue: 'user',
   },
   id_avatar: {
-    type: DataTypes.UUID,
+    type: DataTypes.INTEGER,
     allowNull: true,
   }
 }, {
+  tableName: 'users',
   timestamps: true,
+  underscored: true
 });
 
 export default User;
