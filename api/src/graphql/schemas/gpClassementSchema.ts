@@ -2,7 +2,8 @@ import { gql } from 'apollo-server-express';
 
 const gpClassementTypeDefs = gql`
     type Mutation {
-        implementOldGpClassement: String
+        implementOldGpClassement: String,
+        implementLatestGpClassement: String
     }
 `;
 
