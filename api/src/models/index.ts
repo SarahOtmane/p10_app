@@ -16,10 +16,6 @@ import UserLeague from './user_leagueModel';
 GP.belongsTo(Tracks, { foreignKey: 'id_api_track' });
 Tracks.hasMany(GP, { foreignKey: 'id_api_track' });
 
-// GP_Classement  <-> GP
-GP_Classement.belongsTo(GP, { foreignKey: 'id_gp' });
-GP.hasMany(GP_Classement, { foreignKey: 'id_gp' });
-
 // GP_Classement <-> GP_Pilotes
 GP_Classement.belongsTo(GP_Pilotes, { foreignKey: 'id_gp_pilote' });
 GP_Pilotes.hasMany(GP_Classement, { foreignKey: 'id_gp_pilote' });
