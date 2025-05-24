@@ -31,8 +31,4 @@ const GP = sequelize.define('GP', {
   updatedAt: true
 });
 
-import Tracks from './trackModel';
-GP.belongsTo(Tracks, { foreignKey: 'id_api_track' });
-Tracks.hasMany(GP, { foreignKey: 'id_api_track' });
-
 export default GP;

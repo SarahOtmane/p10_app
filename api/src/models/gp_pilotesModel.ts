@@ -26,17 +26,4 @@ const GP_Pilotes = sequelize.define('GP_Pilotes', {
   updatedAt: true
 });
 
-import GP from './gpModel';
-import Pilotes from './piloteModel';
-import Ecuries from './ecurieModel';
-
-GP_Pilotes.belongsTo(GP, { foreignKey: 'id_gp' });
-GP.hasMany(GP_Pilotes, { foreignKey: 'id_gp' });
-
-GP_Pilotes.belongsTo(Pilotes, { foreignKey: 'id_pilote' });
-Pilotes.hasMany(GP_Pilotes, { foreignKey: 'id_pilote' });
-
-GP_Pilotes.belongsTo(Ecuries, { foreignKey: 'id_ecurie' });
-Ecuries.hasMany(GP_Pilotes, { foreignKey: 'id_ecurie' });
-
 export default GP_Pilotes;
