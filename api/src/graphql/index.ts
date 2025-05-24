@@ -14,6 +14,8 @@ import resultTypeDefs from './schemas/resultSchema';
 
 import trackTypeDefs from './schemas/trackSchema';
 import trackResolvers from './resolvers/trackResolver';
+import gpTypeDefs from './schemas/gpSchema';
+import gpResolvers from './resolvers/gpResolver';
 
 export const typeDefs = mergeTypeDefs([
   userTypeDefs,
@@ -21,6 +23,7 @@ export const typeDefs = mergeTypeDefs([
   leagueTypeDefs,
   resultTypeDefs,
   trackTypeDefs,
+  gpTypeDefs,
 ]);
 
 export const resolvers = mergeResolvers([
@@ -28,5 +31,6 @@ export const resolvers = mergeResolvers([
   avatarResolvers,
   leagueResolvers,
   resultResolvers,
-  trackResolvers
+  trackResolvers,
+  gpResolvers,
 ]);
