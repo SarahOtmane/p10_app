@@ -10,9 +10,11 @@ const gpTypeDefs = gql`
   }
 
   input UpdateGPInput {
-    id_gp: ID!
-    id_pilote: ID!
-    id_ecurie: ID!
+    id_api_races: ID!
+    season: String
+    date: String
+    time: String
+    id_api_track: Int
   }
 
   type Query {
