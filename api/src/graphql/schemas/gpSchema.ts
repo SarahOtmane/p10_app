@@ -7,8 +7,6 @@ const gpTypeDefs = gql`
     date: String!
     time: String!
     id_api_track: Int
-    createdAt: String!
-    updatedAt: String!
   }
 
   type Query {
@@ -18,6 +16,7 @@ const gpTypeDefs = gql`
 
   type Mutation {
     importGPsFromAPI(year: String!): String!
+    updateGP(input: UpdateGPInput!): GP!
   }
 `;
 
