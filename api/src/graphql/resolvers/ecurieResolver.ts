@@ -8,6 +8,9 @@ const ecurieResolvers: IResolvers = {
     Query: {
         getEcuries: async () => {
             return await Ecurie.findAll();
+        },
+        getEcurie: async (_: any, { id_api_ecurie }: { id_api_ecurie: number }) => {
+            return await Ecurie.findByPk(id_api_ecurie);
         }
     },
 

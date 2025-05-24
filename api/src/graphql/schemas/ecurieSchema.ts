@@ -19,6 +19,7 @@ const ecurieTypeDefs = gql`
 
   type Query {
     getEcuries: [Ecurie!]!
+    getEcurie(id_api_ecurie: Int!): Ecurie
   }
 
   type Mutation {
