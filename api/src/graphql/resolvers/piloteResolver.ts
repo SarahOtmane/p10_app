@@ -9,7 +9,7 @@ import { IResolvers } from '@graphql-tools/utils';
 
 const piloteResolvers: IResolvers = {
     Mutation: {
-        importDriversFromOpenF1: async (_: any, { gpId }: { gpId?: number }, context: any) => {
+        importDriversFromOpenF1: async (_: any, __: any, context: any) => {
             const user = requireAdmin(context);
             const userId = user.id_user;    
             if (!userId) {
@@ -37,21 +37,21 @@ const piloteResolvers: IResolvers = {
 
                 for (const driver of uniqueDrivers.values()) {
                     const [ecurie] = await Ecurie.findOrCreate({
-                        where: { nom: driver.team_name },
+                        where: { name: driver.team_name },
                         defaults: {
-                            nom: driver.team_name,
-                            couleur: driver.team_colour || null,
-                            logo: null
+                            name: driver.team_name,
+                            color: driver.team_colour,
+                            logo: ''
                         }
                     });
 
                     const [pilote] = await Pilote.findOrCreate({
-                        where: { name_acronym: driver.full_name },
+                        where: { name_acronym: driver.name_acronym },
                         defaults: {
                             name: driver.last_name,
                             first_name: driver.first_name,
-                            picture: driver.headshot_url || null,
-                            name_acronym: driver.full_name,
+                            picture: driver.headshot_url,
+                            name_acronym: driver.name_acronym,
                         }
                     });
 
@@ -62,16 +62,6 @@ const piloteResolvers: IResolvers = {
                             year: year
                         }
                     });
-
-                    if (gpId) {
-                        await GpPilote.findOrCreate({
-                            where: {
-                                id_gp: gpId,
-                                id_pilote: pilote.getDataValue('id_api_pilotes'),
-                                id_ecurie: ecurie.getDataValue('id_api_ecurie'),
-                            }
-                        });
-                    }
                 }
 
                 return "Importation des pilotes terminée.";
