@@ -5,7 +5,7 @@ export const sequelize = new Sequelize(process.env.DATABASE_URL as string, {
   dialectOptions: {
     ssl: {
       require: true,
-      rejectUnauthorized: false, // Pour Neon
+      rejectUnauthorized: false, 
     },
   },
   logging: false,
@@ -14,11 +14,11 @@ export const sequelize = new Sequelize(process.env.DATABASE_URL as string, {
 export const connectDB = async () => {
   try {
     await sequelize.authenticate();
-    console.log('✅ Connexion PostgreSQL réussie !');
-    await sequelize.sync({ alter: true }); // Synchroniser les modèles
-    console.log('✅ Base de données synchronisée');
+    console.log('Connexion PostgreSQL réussie !');
+    await sequelize.sync({ alter: true });
+    console.log('Base de données synchronisée');
   } catch (error) {
-    console.error('❌ Erreur de connexion à la DB :', error);
+    console.error('Erreur de connexion à la DB :', error);
     process.exit(1);
   }
 };

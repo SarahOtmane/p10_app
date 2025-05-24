@@ -16,7 +16,7 @@ const Results = sequelize.define('Results', {
     allowNull: false
   },
   point_p10: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     allowNull: false
   },
   id_pilote_p10: {
@@ -29,18 +29,5 @@ const Results = sequelize.define('Results', {
   createdAt: true,
   updatedAt: true
 });
-
-import User from './userModel';
-import GP from './gpModel';
-import Pilotes from './piloteModel';
-
-Results.belongsTo(User, { foreignKey: 'id_user' });
-User.hasMany(Results, { foreignKey: 'id_user' });
-
-Results.belongsTo(GP, { foreignKey: 'id_gp' });
-GP.hasMany(Results, { foreignKey: 'id_gp' });
-
-Results.belongsTo(Pilotes, { foreignKey: 'id_pilote_p10' });
-Pilotes.hasMany(Results, { foreignKey: 'id_pilote_p10' });
 
 export default Results;

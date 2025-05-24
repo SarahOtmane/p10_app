@@ -1,15 +1,8 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../config/database';
 
-interface LeagueAttributes {
-  id_league: string;
-  name: string;
-  private: boolean;
-  shared_link?: string;
-  active: boolean;
-}
 
-const League = sequelize.define<Model<LeagueAttributes>>('League', {
+const League = sequelize.define('League', {
   id_league: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -26,7 +19,8 @@ const League = sequelize.define<Model<LeagueAttributes>>('League', {
     defaultValue: false
   },
   shared_link: {
-    type: DataTypes.STRING
+    type: DataTypes.STRING,
+    unique: true,
   },
   active: {
     type: DataTypes.BOOLEAN,
@@ -69,7 +63,7 @@ const generateUniqueLink = async () => {
   return uniqueLink;
 };
 
-League.addHook('beforeSave', async (league: Model<LeagueAttributes>) => {
+League.addHook('beforeSave', async (league) => {
   try {
     if (!(league as any).shared_link) {
       (league as any).shared_link = await generateUniqueLink();
