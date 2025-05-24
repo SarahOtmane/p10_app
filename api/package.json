@@ -4,7 +4,7 @@
   "main": "dist/app.js",
   "scripts": {
     "test": "jest --forceExit --detectOpenHandles",
-    "start": "tsc && node dist/app.js"
+    "start": "tsc && node dist/src/app.js"
   },
   "author": "",
   "license": "ISC",
@@ -23,6 +23,7 @@
   "dependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.9",
+    "@types/node-fetch": "^2.6.12",
     "@types/supertest": "^6.0.3",
     "apollo-server": "^3.13.0",
     "apollo-server-express": "^3.13.0",

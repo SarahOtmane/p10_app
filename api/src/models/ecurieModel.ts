@@ -5,6 +5,7 @@ const Ecurie = sequelize.define('Ecurie', {
   id_api_ecurie: {
     type: DataTypes.INTEGER,
     primaryKey: true,
+    autoIncrement: true,
     allowNull: false,
   },
   name: {
@@ -13,11 +14,11 @@ const Ecurie = sequelize.define('Ecurie', {
   },
   logo: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   },
   color: {
     type: DataTypes.STRING,
-    allowNull: false,
+    allowNull: true,
   }
 }, {
   tableName: 'ecuries',

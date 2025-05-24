@@ -5,16 +5,21 @@ const Pilotes = sequelize.define('Pilotes', {
   id_api_pilotes: {
     type: DataTypes.INTEGER,
     allowNull: false,
-    primaryKey: true
+    primaryKey: true,
+    autoIncrement: true,
   },
   name: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true
   },
-  picture: {
+  first_name: {
     type: DataTypes.STRING,
     allowNull: false
+  },
+  picture: {
+    type: DataTypes.STRING,
+    allowNull: true
   },
   name_acronym: {
     type: DataTypes.STRING,

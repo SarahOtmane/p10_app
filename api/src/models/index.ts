@@ -72,6 +72,11 @@ League.belongsToMany(User, {
   otherKey: 'id_user',
 });
 
+League.hasMany(UserLeague, { foreignKey: 'id_league' });
+UserLeague.belongsTo(League, { foreignKey: 'id_league' });
+
+User.hasMany(UserLeague, { foreignKey: 'id_user' });
+UserLeague.belongsTo(User, { foreignKey: 'id_user' });
 
 
 // Export des modèles

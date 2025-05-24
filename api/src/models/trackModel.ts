@@ -10,7 +10,6 @@ const Tracks = sequelize.define('Tracks', {
   country_name: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true
   },
   track_name: {
     type: DataTypes.STRING,
