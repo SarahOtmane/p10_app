@@ -12,6 +12,10 @@ const Pilotes = sequelize.define('Pilotes', {
     allowNull: false,
     unique: true
   },
+  first_name: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
   picture: {
     type: DataTypes.STRING,
     allowNull: false
