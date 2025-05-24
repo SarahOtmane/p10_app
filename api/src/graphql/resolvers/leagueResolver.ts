@@ -84,9 +84,10 @@ const leagueResolvers: IResolvers = {
         */
         getAllLeaguesOfUser: async(
             _: any,
+            __: any,
             context: MyContext
         ) => {
-            const user = requireAdmin(context);
+            const user = requireAuth(context);
             const userId = user.id_user;
 
             if (!userId) {
@@ -101,7 +102,7 @@ const leagueResolvers: IResolvers = {
             const leagues = await League.findAll({
                 include: {
                     model: UserLeague,
-                    where: { userId },
+                    where: { id_user :userId },
                 },
             });
 
@@ -111,9 +112,10 @@ const leagueResolvers: IResolvers = {
         // fonction qui permet à l'admin de récupérer toutes les leagues
         getAllLeagues: async(
             _: any,
+            __: any,
             context: MyContext
         ) => {
-            const user = requireAuth(context);
+            const user = requireAdmin(context);
             const userId = user.id_user;
 
             if (!userId) {
@@ -203,7 +205,7 @@ const leagueResolvers: IResolvers = {
                     throw new Error("Vous n'avez pas les droits nécessaires pour modifier cette ligue.");
                 }
                 
-                await League.update({ isPrivate, active }, { where: { id_league } });
+                await League.update({ private : isPrivate, active : active }, { where: { id_league } });
 
                 return "League modifiée";
             } catch (error) {
@@ -286,7 +288,7 @@ const leagueResolvers: IResolvers = {
             }
 
             const userLeagueInvited = await UserLeague.findOne({
-                where: { id_user: userInvited.getDataValue('id_user'), id_league: league.getDataValue('id_league') },
+                where: { id_user: userInvited.getDataValue('id'), id_league: league.getDataValue('id_league') },
             });
             if (userLeagueInvited) {
                 throw new Error("L'utilisateur fait déjà partie de cette league.");
