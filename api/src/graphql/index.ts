@@ -21,6 +21,12 @@ import gpResolvers from './resolvers/gpResolver';
 import piloteTypeDefs from './schemas/piloteSchema';
 import piloteResolvers from './resolvers/piloteResolver';
 
+import ecurieTypeDefs from './schemas/ecurieSchema';
+import ecurieResolvers from './resolvers/ecurieResolver';
+
+import gpClassementTypeDefs from './schemas/gpClassementSchema';
+import gpClassementResolvers from './resolvers/gpClassementResolver';
+
 export const typeDefs = mergeTypeDefs([
   userTypeDefs,
   avatarTypeDefs,
@@ -29,6 +35,8 @@ export const typeDefs = mergeTypeDefs([
   trackTypeDefs,
   gpTypeDefs,
   piloteTypeDefs,
+  ecurieTypeDefs,
+  gpClassementTypeDefs,
 ]);
 
 export const resolvers = mergeResolvers([
@@ -39,4 +47,6 @@ export const resolvers = mergeResolvers([
   trackResolvers,
   gpResolvers,
   piloteResolvers,
+  ecurieResolvers,
+  gpClassementResolvers
 ]);
