@@ -1,5 +1,5 @@
 import User from '../../models/userModel';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { MyContext } from '../../types/context';
 import { requireAuth } from '../../utils/auth';

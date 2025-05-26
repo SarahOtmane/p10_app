@@ -1,4 +1,3 @@
-
 import { IResolvers } from '@graphql-tools/utils';
 import League from '../../models/leagueModel';
 import { requireAdmin, requireAuth } from '../../utils/auth';

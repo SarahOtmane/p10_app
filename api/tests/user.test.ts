@@ -1,6 +1,6 @@
 import userResolvers from '../src/graphql/resolvers/userResolvers';
 import User from '../src/models/userModel';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { requireAuth } from '../src/utils/auth';
 import 'dotenv/config';
