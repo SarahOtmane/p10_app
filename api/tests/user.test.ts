@@ -77,9 +77,9 @@ describe('userResolvers', () => {
   describe('Query', () => {
     describe('users', () => {
       it('should return all users', async () => {
-        (requireAdmin as jest.Mock).mockReturnValue({ id_user: 1, role: 'admin' });
-        (User.findByPk as jest.Mock).mockResolvedValue(mockUser); // <-- Ajoute ceci
-        (User.findAll as jest.Mock).mockResolvedValue([mockUser]);
+        (requireAdmin as unknown as jest.Mock).mockReturnValue({ id_user: 1, role: 'admin' });
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockUser); // <-- Ajoute ceci
+        (User.findAll as unknown as jest.Mock).mockResolvedValue([mockUser]);
         const users = await userResolvers.Query.users({}, {}, contextUser);
         expect(User.findAll).toHaveBeenCalledWith({ attributes: { exclude: ['password'] } });
         expect(users).toEqual([mockUser]);
@@ -88,8 +88,8 @@ describe('userResolvers', () => {
 
     describe('user', () => {
       it('should return a user by id', async () => {
-        (requireAuth as jest.Mock).mockReturnValue({ id_user: 1, role: 'admin' });
-        (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
+        (requireAuth as unknown as jest.Mock).mockReturnValue({ id_user: 1, role: 'admin' });
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockUser);
         const user = await userResolvers.Query.user({}, null, contextUser);
         expect(User.findByPk).toHaveBeenNthCalledWith(1, 1); // Premier appel avec 1 (nombre)
         expect(User.findByPk).toHaveBeenNthCalledWith(2, 1, { attributes: { exclude: ['password'] } }); // Deuxième appel
@@ -97,8 +97,8 @@ describe('userResolvers', () => {
       });
 
       it('should throw error if user not found', async () => {
-        (requireAuth as jest.Mock).mockReturnValue({ id_user: 1, role: 'admin' });
-        (User.findByPk as jest.Mock).mockResolvedValue(null);
+        (requireAuth as unknown as jest.Mock).mockReturnValue({ id_user: 1, role: 'admin' });
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(null);
         await expect(userResolvers.Query.user({}, null, contextUser)).rejects.toThrow("Utilisateur non trouvé.");
       });
     });
@@ -107,9 +107,9 @@ describe('userResolvers', () => {
   describe('Mutation', () => {
     describe('registerAUser', () => {
       it('should register a new user', async () => {
-        (User.findOne as jest.Mock).mockResolvedValue(null);
-        (bcrypt.hash as jest.Mock).mockResolvedValue('hashedpassword');
-        (User.create as jest.Mock).mockResolvedValue(mockUser);
+        (User.findOne as unknown as jest.Mock).mockResolvedValue(null);
+        (bcrypt.hash as unknown as jest.Mock).mockResolvedValue('hashedpassword');
+        (User.create as unknown as jest.Mock).mockResolvedValue(mockUser);
 
         const input = {
           email: 'test@example.com',
@@ -133,7 +133,7 @@ describe('userResolvers', () => {
       });
 
       it('should throw error if email exists', async () => {
-        (User.findOne as jest.Mock).mockResolvedValue(mockUser);
+        (User.findOne as unknown as jest.Mock).mockResolvedValue(mockUser);
         await expect(
           userResolvers.Mutation.registerAUser(null, {
             email: 'test@example.com',
@@ -147,7 +147,7 @@ describe('userResolvers', () => {
       });
 
       it('should throw error if trying to create admin user', async () => {
-        (User.findOne as jest.Mock).mockResolvedValue(null);
+        (User.findOne as unknown as jest.Mock).mockResolvedValue(null);
         await expect(
           userResolvers.Mutation.registerAUser(null, {
             email: 'test@example.com',
@@ -163,9 +163,9 @@ describe('userResolvers', () => {
 
     describe('loginAUser', () => {
       it('should login a user and return token', async () => {
-        (User.findOne as jest.Mock).mockResolvedValue(mockUser);
-        (bcrypt.compare as jest.Mock).mockResolvedValue(true);
-        (jwt.sign as jest.Mock).mockReturnValue('token');
+        (User.findOne as unknown as jest.Mock).mockResolvedValue(mockUser);
+        (bcrypt.compare as unknown as jest.Mock).mockResolvedValue(true);
+        (jwt.sign as unknown as jest.Mock).mockReturnValue('token');
 
         const result = await userResolvers.Mutation.loginAUser(null, {
           email: 'test@example.com',
@@ -179,7 +179,7 @@ describe('userResolvers', () => {
       });
 
       it('should throw error if email does not exist', async () => {
-        (User.findOne as jest.Mock).mockResolvedValue(null);
+        (User.findOne as unknown as jest.Mock).mockResolvedValue(null);
         await expect(
           userResolvers.Mutation.loginAUser(null, {
             email: 'notfound@example.com',
@@ -189,8 +189,8 @@ describe('userResolvers', () => {
       });
 
       it('should throw error if password is invalid', async () => {
-        (User.findOne as jest.Mock).mockResolvedValue(mockUser);
-        (bcrypt.compare as jest.Mock).mockResolvedValue(false);
+        (User.findOne as unknown as jest.Mock).mockResolvedValue(mockUser);
+        (bcrypt.compare as unknown as jest.Mock).mockResolvedValue(false);
 
         await expect(
           userResolvers.Mutation.loginAUser(null, {
@@ -205,12 +205,12 @@ describe('userResolvers', () => {
       const context = { req: { headers: { authorization: 'Bearer token' } }, res: {} } as any;
 
       it('should update user successfully', async () => {
-        (requireAuth as jest.Mock).mockReturnValue({ id_user: 1 });
-        (User.findByPk as jest.Mock).mockResolvedValue({
+        (requireAuth as unknown as jest.Mock).mockReturnValue({ id_user: 1 });
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue({
           ...mockUser,
           update: jest.fn().mockResolvedValue(true),
         });
-        (bcrypt.hash as jest.Mock).mockResolvedValue('hashedpassword');
+        (bcrypt.hash as unknown as jest.Mock).mockResolvedValue('hashedpassword');
 
         const result = await userResolvers.Mutation.updateUser(
           null,
@@ -231,7 +231,7 @@ describe('userResolvers', () => {
       });
 
       it('should throw error if user not authenticated', async () => {
-        (requireAuth as jest.Mock).mockReturnValue({});
+        (requireAuth as unknown as jest.Mock).mockReturnValue({});
         await expect(
           userResolvers.Mutation.updateUser(
             null,
@@ -248,8 +248,8 @@ describe('userResolvers', () => {
       });
 
       it('should throw error if user not found', async () => {
-        (requireAuth as jest.Mock).mockReturnValue({ id_user: 1 });
-        (User.findByPk as jest.Mock).mockResolvedValue(null);
+        (requireAuth as unknown as jest.Mock).mockReturnValue({ id_user: 1 });
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(null);
 
         await expect(
           userResolvers.Mutation.updateUser(
@@ -271,8 +271,8 @@ describe('userResolvers', () => {
       const context = { req: { headers: { authorization: 'Bearer token' } }, res: {} } as any;
 
       it('should delete user successfully', async () => {
-        (requireAuth as jest.Mock).mockReturnValue({ id_user: 1 });
-        (User.destroy as jest.Mock).mockResolvedValue(1);
+        (requireAuth as unknown as jest.Mock).mockReturnValue({ id_user: 1 });
+        (User.destroy as unknown as jest.Mock).mockResolvedValue(1);
 
         const result = await userResolvers.Mutation.deleteUser(null, null, context);
         expect(User.destroy).toHaveBeenCalledWith({ where: { id_user: 1 } });
@@ -280,8 +280,8 @@ describe('userResolvers', () => {
       });
 
       it('should throw error if user not found', async () => {
-        (requireAuth as jest.Mock).mockReturnValue({ id_user: 1 });
-        (User.destroy as jest.Mock).mockResolvedValue(0);
+        (requireAuth as unknown as jest.Mock).mockReturnValue({ id_user: 1 });
+        (User.destroy as unknown as jest.Mock).mockResolvedValue(0);
 
         await expect(
           userResolvers.Mutation.deleteUser(null, null, context)

@@ -48,34 +48,34 @@ describe('piloteResolvers', () => {
     describe('Query', () => {
         describe('pilotes', () => {
             it('should return all pilotes', async () => {
-                (Pilote.findAll as jest.Mock).mockResolvedValue([mockPilote]);
+                (Pilote.findAll as unknown as jest.Mock).mockResolvedValue([mockPilote]);
                 const result = await (piloteResolvers as any).Query.pilotes();
                 expect(Pilote.findAll).toHaveBeenCalled();
                 expect(result).toEqual([mockPilote]);
             });
 
             it('should throw if findAll fails', async () => {
-                (Pilote.findAll as jest.Mock).mockRejectedValue(new Error('DB error'));
+                (Pilote.findAll as unknown as jest.Mock).mockRejectedValue(new Error('DB error'));
                 await expect((piloteResolvers.Query as any).pilotes()).rejects.toThrow('DB error');
             });
         });
 
         describe('pilote', () => {
             it('should return pilote by id', async () => {
-                (Pilote.findByPk as jest.Mock).mockResolvedValue(mockPilote);
+                (Pilote.findByPk as unknown as jest.Mock).mockResolvedValue(mockPilote);
                 const result = await (piloteResolvers.Query as any).pilote(null, { id_api_pilotes: 1 });
                 expect(Pilote.findByPk).toHaveBeenCalledWith(1);
                 expect(result).toBe(mockPilote);
             });
 
             it('should return null if not found', async () => {
-                (Pilote.findByPk as jest.Mock).mockResolvedValue(null);
+                (Pilote.findByPk as unknown as jest.Mock).mockResolvedValue(null);
                 const result = await (piloteResolvers.Query as any).pilote(null, { id_api_pilotes: 999 });
                 expect(result).toBeNull();
             });
 
             it('should throw if findByPk fails', async () => {
-                (Pilote.findByPk as jest.Mock).mockRejectedValue(new Error('DB error'));
+                (Pilote.findByPk as unknown as jest.Mock).mockRejectedValue(new Error('DB error'));
                 await expect(
                     (piloteResolvers.Query as any).pilote(null, { id_api_pilotes: 1 })
                 ).rejects.toThrow('DB error');
@@ -118,14 +118,14 @@ describe('piloteResolvers', () => {
             ];
 
             beforeEach(() => {
-                (requireAdmin as jest.Mock).mockReturnValue(mockUser);
-                (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-                (fetch as jest.Mock).mockResolvedValue({
+                (requireAdmin as unknown as jest.Mock).mockReturnValue(mockUser);
+                (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockUser);
+                (fetch as unknown as jest.Mock).mockResolvedValue({
                     json: jest.fn().mockResolvedValue(driverData)
                 });
-                (Ecurie.findOrCreate as jest.Mock).mockResolvedValue([mockEcurie]);
-                (Pilote.findOrCreate as jest.Mock).mockResolvedValue([mockPilote]);
-                (PiloteEcurie.findOrCreate as jest.Mock).mockResolvedValue([{}]);
+                (Ecurie.findOrCreate as unknown as jest.Mock).mockResolvedValue([mockEcurie]);
+                (Pilote.findOrCreate as unknown as jest.Mock).mockResolvedValue([mockPilote]);
+                (PiloteEcurie.findOrCreate as unknown as jest.Mock).mockResolvedValue([{}]);
             });
 
             it('should import unique drivers and create records', async () => {
@@ -140,43 +140,43 @@ describe('piloteResolvers', () => {
             });
 
             it('should throw if user not authenticated', async () => {
-                (requireAdmin as jest.Mock).mockReturnValue({});
+                (requireAdmin as unknown as jest.Mock).mockReturnValue({});
                 await expect(
                     (piloteResolvers.Mutation as any).importDriversFromOpenF1(null, null, context)
                 ).rejects.toThrow("Utilisateur non authentifié.");
             });
 
             it('should throw if user not found', async () => {
-                (requireAdmin as jest.Mock).mockReturnValue({ id_user: 99 });
-                (User.findByPk as jest.Mock).mockResolvedValue(null);
+                (requireAdmin as unknown as jest.Mock).mockReturnValue({ id_user: 99 });
+                (User.findByPk as unknown as jest.Mock).mockResolvedValue(null);
                 await expect(
                     (piloteResolvers.Mutation as any).importDriversFromOpenF1(null, null, context)
                 ).rejects.toThrow("Utilisateur non trouvé.");
             });
 
             it('should throw if fetch fails', async () => {
-                (fetch as jest.Mock).mockRejectedValue(new Error('fetch error'));
+                (fetch as unknown as jest.Mock).mockRejectedValue(new Error('fetch error'));
                 await expect(
                     (piloteResolvers.Mutation as any).importDriversFromOpenF1(null, null, context)
                 ).rejects.toThrow("Une erreur est survenue pendant l'importation.");
             });
 
             it('should throw if Ecurie.findOrCreate fails', async () => {
-                (Ecurie.findOrCreate as jest.Mock).mockRejectedValue(new Error('ecurie error'));
+                (Ecurie.findOrCreate as unknown as jest.Mock).mockRejectedValue(new Error('ecurie error'));
                 await expect(
                     (piloteResolvers.Mutation as any).importDriversFromOpenF1(null, null, context)
                 ).rejects.toThrow("Une erreur est survenue pendant l'importation.");
             });
 
             it('should throw if Pilote.findOrCreate fails', async () => {
-                (Pilote.findOrCreate as jest.Mock).mockRejectedValue(new Error('pilote error'));
+                (Pilote.findOrCreate as unknown as jest.Mock).mockRejectedValue(new Error('pilote error'));
                 await expect(
                     (piloteResolvers.Mutation as any).importDriversFromOpenF1(null, null, context)
                 ).rejects.toThrow("Une erreur est survenue pendant l'importation.");
             });
 
             it('should throw if PiloteEcurie.findOrCreate fails', async () => {
-                (PiloteEcurie.findOrCreate as jest.Mock).mockRejectedValue(new Error('pe error'));
+                (PiloteEcurie.findOrCreate as unknown as jest.Mock).mockRejectedValue(new Error('pe error'));
                 await expect(
                     (piloteResolvers.Mutation as any).importDriversFromOpenF1(null, null, context)
                 ).rejects.toThrow("Une erreur est survenue pendant l'importation.");

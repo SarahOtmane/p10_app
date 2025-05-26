@@ -34,15 +34,15 @@ const mockGpPilote = { getDataValue: jest.fn(() => 40) };
 
 beforeEach(() => {
   jest.clearAllMocks();
-  (requireAuth as jest.Mock).mockReturnValue(mockUser);
-  (requireAdmin as jest.Mock).mockReturnValue(mockUser); // Ajoute cette ligne
-  (User.findByPk as jest.Mock).mockResolvedValue(mockExistingUser);
+  (requireAuth as unknown as jest.Mock).mockReturnValue(mockUser);
+  (requireAdmin as unknown as jest.Mock).mockReturnValue(mockUser); // Ajoute cette ligne
+  (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockExistingUser);
 });
 
 describe('gpClassementResolvers', () => {
   describe('Mutation.implementOldGpClassement', () => {
     it('should import classement successfully', async () => {
-      (fetch as jest.Mock)
+      (fetch as unknown as jest.Mock)
         .mockResolvedValueOnce({
           json: async () => [{ date: '2024-05-01' }]
         })
@@ -51,12 +51,12 @@ describe('gpClassementResolvers', () => {
             { driver: 'Lewis Hamilton', team: 'Mercedes', position: '1' }
           ]
         });
-      (GP.findOne as jest.Mock).mockResolvedValue(mockGP);
-      (Pilote.findOne as jest.Mock).mockResolvedValue(mockPilote);
-      (Ecurie.findOne as jest.Mock).mockResolvedValue(mockEcurie);
-      (PilotesEcurie.findOrCreate as jest.Mock).mockResolvedValue([{}]);
-      (GP_Pilotes.findOrCreate as jest.Mock).mockResolvedValue([mockGpPilote]);
-      (GP_Classement.findOrCreate as jest.Mock).mockResolvedValue([{}]);
+      (GP.findOne as unknown as jest.Mock).mockResolvedValue(mockGP);
+      (Pilote.findOne as unknown as jest.Mock).mockResolvedValue(mockPilote);
+      (Ecurie.findOne as unknown as jest.Mock).mockResolvedValue(mockEcurie);
+      (PilotesEcurie.findOrCreate as unknown as jest.Mock).mockResolvedValue([{}]);
+      (GP_Pilotes.findOrCreate as unknown as jest.Mock).mockResolvedValue([mockGpPilote]);
+      (GP_Classement.findOrCreate as unknown as jest.Mock).mockResolvedValue([{}]);
 
       const result = await (gpClassementResolvers as any).Mutation.implementOldGpClassement(
         {}, {}, mockContext
@@ -65,22 +65,22 @@ describe('gpClassementResolvers', () => {
     });
 
     it('should throw if user not authenticated', async () => {
-      (requireAuth as jest.Mock).mockReturnValue({});
+      (requireAuth as unknown as jest.Mock).mockReturnValue({});
       await expect(
         (gpClassementResolvers as any).Mutation.implementOldGpClassement({}, {}, mockContext)
       ).rejects.toThrow("Erreur lors de l’importation du classement GP");
     });
 
     it('should throw if user not found', async () => {
-      (requireAuth as jest.Mock).mockReturnValue(mockUser);
-      (User.findByPk as jest.Mock).mockResolvedValue(null);
+      (requireAuth as unknown as jest.Mock).mockReturnValue(mockUser);
+      (User.findByPk as unknown as jest.Mock).mockResolvedValue(null);
       await expect(
         (gpClassementResolvers as any).Mutation.implementOldGpClassement({}, {}, mockContext)
       ).rejects.toThrow("Utilisateur non trouvé.");
     });
 
     it('should throw if fetch dates returns invalid data', async () => {
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as unknown as jest.Mock).mockResolvedValueOnce({
         json: async () => ({ not: 'an array' })
       });
       await expect(
@@ -89,7 +89,7 @@ describe('gpClassementResolvers', () => {
     });
 
     it('should throw if classement fetch returns error', async () => {
-      (fetch as jest.Mock)
+      (fetch as unknown as jest.Mock)
         .mockResolvedValueOnce({
           json: async () => [{ date: '2024-05-01' }]
         })
@@ -102,7 +102,7 @@ describe('gpClassementResolvers', () => {
     });
 
     it('should throw if GP not found', async () => {
-      (fetch as jest.Mock)
+      (fetch as unknown as jest.Mock)
         .mockResolvedValueOnce({
           json: async () => [{ date: '2024-05-01' }]
         })
@@ -111,14 +111,14 @@ describe('gpClassementResolvers', () => {
             { driver: 'Lewis Hamilton', team: 'Mercedes', position: '1' }
           ]
         });
-      (GP.findOne as jest.Mock).mockResolvedValue(null);
+      (GP.findOne as unknown as jest.Mock).mockResolvedValue(null);
       await expect(
         (gpClassementResolvers as any).Mutation.implementOldGpClassement({}, {}, mockContext)
       ).rejects.toThrow("Erreur lors de l’importation du classement GP");
     });
 
     it('should throw if ecurie not found', async () => {
-      (fetch as jest.Mock)
+      (fetch as unknown as jest.Mock)
         .mockResolvedValueOnce({
           json: async () => [{ date: '2024-05-01' }]
         })
@@ -127,9 +127,9 @@ describe('gpClassementResolvers', () => {
             { driver: 'Lewis Hamilton', team: 'Mercedes', position: '1' }
           ]
         });
-      (GP.findOne as jest.Mock).mockResolvedValue(mockGP);
-      (Pilote.findOne as jest.Mock).mockResolvedValue(mockPilote);
-      (Ecurie.findOne as jest.Mock).mockResolvedValue(null);
+      (GP.findOne as unknown as jest.Mock).mockResolvedValue(mockGP);
+      (Pilote.findOne as unknown as jest.Mock).mockResolvedValue(mockPilote);
+      (Ecurie.findOne as unknown as jest.Mock).mockResolvedValue(null);
       await expect(
         (gpClassementResolvers as any).Mutation.implementOldGpClassement({}, {}, mockContext)
       ).rejects.toThrow("Erreur lors de l’importation du classement GP");
@@ -138,17 +138,17 @@ describe('gpClassementResolvers', () => {
 
   describe('Mutation.implementLatestGpClassement', () => {
     it('should import latest classement successfully', async () => {
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as unknown as jest.Mock).mockResolvedValueOnce({
         json: async () => [
           { driver: 'Lewis Hamilton', team: 'Mercedes', position: '1', scraped_at: '2024-05-01T12:00:00Z' }
         ]
       });
-      (GP.findOne as jest.Mock).mockResolvedValue(mockGP);
-      (Pilote.findOne as jest.Mock).mockResolvedValue(mockPilote);
-      (Ecurie.findOne as jest.Mock).mockResolvedValue(mockEcurie);
-      (PilotesEcurie.findOrCreate as jest.Mock).mockResolvedValue([{}]);
-      (GP_Pilotes.findOrCreate as jest.Mock).mockResolvedValue([mockGpPilote]);
-      (GP_Classement.findOrCreate as jest.Mock).mockResolvedValue([{}]);
+      (GP.findOne as unknown as jest.Mock).mockResolvedValue(mockGP);
+      (Pilote.findOne as unknown as jest.Mock).mockResolvedValue(mockPilote);
+      (Ecurie.findOne as unknown as jest.Mock).mockResolvedValue(mockEcurie);
+      (PilotesEcurie.findOrCreate as unknown as jest.Mock).mockResolvedValue([{}]);
+      (GP_Pilotes.findOrCreate as unknown as jest.Mock).mockResolvedValue([mockGpPilote]);
+      (GP_Classement.findOrCreate as unknown as jest.Mock).mockResolvedValue([{}]);
 
       const result = await (gpClassementResolvers as any).Mutation.implementLatestGpClassement(
         {}, {}, mockContext
@@ -157,22 +157,22 @@ describe('gpClassementResolvers', () => {
     });
 
     it('should throw if user not authenticated', async () => {
-      (requireAuth as jest.Mock).mockReturnValue({});
+      (requireAuth as unknown as jest.Mock).mockReturnValue({});
       await expect(
         (gpClassementResolvers as any).Mutation.implementLatestGpClassement({}, {}, mockContext)
       ).rejects.toThrow('Utilisateur non authentifié.');
     });
 
     it('should throw if user not found', async () => {
-      (requireAuth as jest.Mock).mockReturnValue(mockUser);
-      (User.findByPk as jest.Mock).mockResolvedValue(null);
+      (requireAuth as unknown as jest.Mock).mockReturnValue(mockUser);
+      (User.findByPk as unknown as jest.Mock).mockResolvedValue(null);
       await expect(
         (gpClassementResolvers as any).Mutation.implementLatestGpClassement({}, {}, mockContext)
       ).rejects.toThrow('Utilisateur non trouvé.');
     });
 
     it('should throw if classement fetch returns invalid data', async () => {
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as unknown as jest.Mock).mockResolvedValueOnce({
         json: async () => ({ not: 'an array' })
       });
       await expect(
@@ -181,7 +181,7 @@ describe('gpClassementResolvers', () => {
     });
 
     it('should throw if scraped_at missing', async () => {
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as unknown as jest.Mock).mockResolvedValueOnce({
         json: async () => [{ driver: 'Lewis Hamilton', team: 'Mercedes', position: '1' }]
       });
       await expect(
@@ -190,12 +190,12 @@ describe('gpClassementResolvers', () => {
     });
 
     it('should throw if GP not found', async () => {
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as unknown as jest.Mock).mockResolvedValueOnce({
         json: async () => [
           { driver: 'Lewis Hamilton', team: 'Mercedes', position: '1', scraped_at: '2024-05-01T12:00:00Z' }
         ]
       });
-      (GP.findOne as jest.Mock).mockResolvedValue(null);
+      (GP.findOne as unknown as jest.Mock).mockResolvedValue(null);
       await expect(
         (gpClassementResolvers as any).Mutation.implementLatestGpClassement({}, {}, mockContext)
       ).rejects.toThrow("Erreur lors de l’importation du classement du dernier GP");

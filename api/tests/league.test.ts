@@ -60,9 +60,9 @@ beforeAll(() => {
 
 describe('Query.getLeague', () => {
     it('returns league if user is member', async () => {
-        (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-        (League.findByPk as jest.Mock).mockResolvedValue({ id_league: 1 });
-        (UserLeague.findOne as jest.Mock).mockResolvedValue({});
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockUser);
+        (League.findByPk as unknown as jest.Mock).mockResolvedValue({ id_league: 1 });
+        (UserLeague.findOne as unknown as jest.Mock).mockResolvedValue({});
 
         const result = await typedLeagueResolvers.Query.getLeague(
             {},
@@ -79,24 +79,24 @@ describe('Query.getLeague', () => {
     });
 
     it('throws if user not found', async () => {
-        (User.findByPk as jest.Mock).mockResolvedValue(null);
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(null);
         await expect(
             typedLeagueResolvers.Query.getLeague({}, { id_league: 1 }, mockContext())
         ).rejects.toThrow('Utilisateur non trouvé.');
     });
 
     it('throws if league not found', async () => {
-        (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-        (League.findByPk as jest.Mock).mockResolvedValue(null);
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockUser);
+        (League.findByPk as unknown as jest.Mock).mockResolvedValue(null);
         await expect(
             typedLeagueResolvers.Query.getLeague({}, { id_league: 1 }, mockContext())
         ).rejects.toThrow("La league spécifiée n'existe pas.");
     });
 
     it('throws if user not member', async () => {
-        (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-        (League.findByPk as jest.Mock).mockResolvedValue({ id_league: 1 });
-        (UserLeague.findOne as jest.Mock).mockResolvedValue(null);
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockUser);
+        (League.findByPk as unknown as jest.Mock).mockResolvedValue({ id_league: 1 });
+        (UserLeague.findOne as unknown as jest.Mock).mockResolvedValue(null);
         await expect(
             typedLeagueResolvers.Query.getLeague({}, { id_league: 1 }, mockContext())
         ).rejects.toThrow('Vous ne faites pas partie de cette league.');
@@ -105,8 +105,8 @@ describe('Query.getLeague', () => {
 
 describe('Query.getAllLeaguesOfUser', () => {
     it('returns leagues for user', async () => {
-        (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-        (League.findAll as jest.Mock).mockResolvedValue([{ id_league: 1 }]);
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockUser);
+        (League.findAll as unknown as jest.Mock).mockResolvedValue([{ id_league: 1 }]);
         const adminUser = { ...mockUser, role: 'admin', id_user: 1 };
         const context = mockContext(adminUser);
         const result = await typedLeagueResolvers.Query.getAllLeaguesOfUser({}, {}, context);
@@ -121,7 +121,7 @@ describe('Query.getAllLeaguesOfUser', () => {
     });
 
     it('throws if user not found', async () => {
-        (User.findByPk as jest.Mock).mockResolvedValue(null);
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(null);
         const context = mockContext({ ...mockUser, role: 'admin' });
         await expect(
             typedLeagueResolvers.Query.getAllLeaguesOfUser({}, {}, context)
@@ -131,8 +131,8 @@ describe('Query.getAllLeaguesOfUser', () => {
 
 describe('Query.getAllLeagues', () => {
     it('returns all leagues', async () => {
-        (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-        (League.findAll as jest.Mock).mockResolvedValue([{ id_league: 1 }]);
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockUser);
+        (League.findAll as unknown as jest.Mock).mockResolvedValue([{ id_league: 1 }]);
         const result = await typedLeagueResolvers.Query.getAllLeagues({}, {}, mockContext());
         expect(result).toEqual([{ id_league: 1 }]);
     });
@@ -144,7 +144,7 @@ describe('Query.getAllLeagues', () => {
     });
 
     it('throws if user not found', async () => {
-        (User.findByPk as jest.Mock).mockResolvedValue(null);
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(null);
         await expect(
             typedLeagueResolvers.Query.getAllLeagues({}, {}, mockContext())
         ).rejects.toThrow("Utilisateur non trouvé.");
@@ -153,12 +153,12 @@ describe('Query.getAllLeagues', () => {
 
 describe('Mutation.createLeague', () => {
     it('creates league and returns shared_link', async () => {
-        (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-        (League.create as jest.Mock).mockResolvedValue({
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockUser);
+        (League.create as unknown as jest.Mock).mockResolvedValue({
             getDataValue: (key: string) => (key === 'id_league' ? 1 : 'abcdefg'),
         });
-        (UserLeague.create as jest.Mock).mockResolvedValue({});
-        (League.findOne as jest.Mock).mockResolvedValue(null);
+        (UserLeague.create as unknown as jest.Mock).mockResolvedValue({});
+        (League.findOne as unknown as jest.Mock).mockResolvedValue(null);
 
         const result = await typedLeagueResolvers.Mutation.createLeague(
             {},
@@ -175,7 +175,7 @@ describe('Mutation.createLeague', () => {
     });
 
     it('throws if user not found', async () => {
-        (User.findByPk as jest.Mock).mockResolvedValue(null);
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(null);
         await expect(
             typedLeagueResolvers.Mutation.createLeague({}, { name: 'Test', isPrivate: true }, mockContext())
         ).rejects.toThrow("Error creating league");
@@ -184,10 +184,10 @@ describe('Mutation.createLeague', () => {
 
 describe('Mutation.updateLeague', () => {
     it('updates league if admin', async () => {
-        (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-        (League.findByPk as jest.Mock).mockResolvedValue({ id_league: 1 });
-        (UserLeague.findOne as jest.Mock).mockResolvedValue({ getDataValue: () => 'admin' });
-        (League.update as jest.Mock).mockResolvedValue([1]);
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockUser);
+        (League.findByPk as unknown as jest.Mock).mockResolvedValue({ id_league: 1 });
+        (UserLeague.findOne as unknown as jest.Mock).mockResolvedValue({ getDataValue: () => 'admin' });
+        (League.update as unknown as jest.Mock).mockResolvedValue([1]);
 
         const result = await typedLeagueResolvers.Mutation.updateLeague(
             {},
@@ -198,9 +198,9 @@ describe('Mutation.updateLeague', () => {
     });
 
     it('throws if not admin', async () => {
-        (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-        (League.findByPk as jest.Mock).mockResolvedValue({ id_league: 1 });
-        (UserLeague.findOne as jest.Mock).mockResolvedValue({ getDataValue: () => 'user' });
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockUser);
+        (League.findByPk as unknown as jest.Mock).mockResolvedValue({ id_league: 1 });
+        (UserLeague.findOne as unknown as jest.Mock).mockResolvedValue({ getDataValue: () => 'user' });
         await expect(
             typedLeagueResolvers.Mutation.updateLeague(
                 {},
@@ -211,8 +211,8 @@ describe('Mutation.updateLeague', () => {
     });
 
     it('throws if league not found', async () => {
-        (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-        (League.findByPk as jest.Mock).mockResolvedValue(null);
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockUser);
+        (League.findByPk as unknown as jest.Mock).mockResolvedValue(null);
         await expect(
             typedLeagueResolvers.Mutation.updateLeague(
                 {},
@@ -225,10 +225,10 @@ describe('Mutation.updateLeague', () => {
 
 describe('Mutation.deleteLeague', () => {
     it('deletes league if admin', async () => {
-        (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-        (League.findByPk as jest.Mock).mockResolvedValue({ id_league: 1 });
-        (UserLeague.findOne as jest.Mock).mockResolvedValue({ getDataValue: () => 'admin' });
-        (League.destroy as jest.Mock).mockResolvedValue(1);
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockUser);
+        (League.findByPk as unknown as jest.Mock).mockResolvedValue({ id_league: 1 });
+        (UserLeague.findOne as unknown as jest.Mock).mockResolvedValue({ getDataValue: () => 'admin' });
+        (League.destroy as unknown as jest.Mock).mockResolvedValue(1);
 
         const result = await typedLeagueResolvers.Mutation.deleteLeague(
             {},
@@ -239,9 +239,9 @@ describe('Mutation.deleteLeague', () => {
     });
 
     it('throws if not admin', async () => {
-        (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-        (League.findByPk as jest.Mock).mockResolvedValue({ id_league: 1 });
-        (UserLeague.findOne as jest.Mock).mockResolvedValue({ getDataValue: () => 'user' });
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockUser);
+        (League.findByPk as unknown as jest.Mock).mockResolvedValue({ id_league: 1 });
+        (UserLeague.findOne as unknown as jest.Mock).mockResolvedValue({ getDataValue: () => 'user' });
         await expect(
             typedLeagueResolvers.Mutation.deleteLeague(
                 {},
@@ -252,8 +252,8 @@ describe('Mutation.deleteLeague', () => {
     });
 
     it('throws if league not found', async () => {
-        (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-        (League.findByPk as jest.Mock).mockResolvedValue(null);
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockUser);
+        (League.findByPk as unknown as jest.Mock).mockResolvedValue(null);
         await expect(
             typedLeagueResolvers.Mutation.deleteLeague(
                 {},
@@ -266,13 +266,13 @@ describe('Mutation.deleteLeague', () => {
 
 describe('Mutation.inviteUserToLeague', () => {
     it('sends invitation if all ok', async () => {
-        (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-        (League.findOne as jest.Mock).mockResolvedValue({ getDataValue: (k: string) => (k === 'id_league' ? 1 : 'abcdefg') });
-        (UserLeague.findOne as jest.Mock)
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockUser);
+        (League.findOne as unknown as jest.Mock).mockResolvedValue({ getDataValue: (k: string) => (k === 'id_league' ? 1 : 'abcdefg') });
+        (UserLeague.findOne as unknown as jest.Mock)
             .mockResolvedValueOnce({}) // userLeague
             .mockResolvedValueOnce(null); // userLeagueInvited
-        (User.findOne as jest.Mock).mockResolvedValue({ getDataValue: () => 2 });
-        (sendInvitationEmail as jest.Mock).mockResolvedValue(undefined);
+        (User.findOne as unknown as jest.Mock).mockResolvedValue({ getDataValue: () => 2 });
+        (sendInvitationEmail as unknown as jest.Mock).mockResolvedValue(undefined);
 
         const result = await typedLeagueResolvers.Mutation.inviteUserToLeague(
             {},
@@ -284,12 +284,12 @@ describe('Mutation.inviteUserToLeague', () => {
     });
 
     it('throws if invited user already member', async () => {
-        (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-        (League.findOne as jest.Mock).mockResolvedValue({ getDataValue: (k: string) => (k === 'id_league' ? 1 : 'abcdefg') });
-        (UserLeague.findOne as jest.Mock)
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockUser);
+        (League.findOne as unknown as jest.Mock).mockResolvedValue({ getDataValue: (k: string) => (k === 'id_league' ? 1 : 'abcdefg') });
+        (UserLeague.findOne as unknown as jest.Mock)
             .mockResolvedValueOnce({}) // userLeague
             .mockResolvedValueOnce({}); // userLeagueInvited
-        (User.findOne as jest.Mock).mockResolvedValue({ getDataValue: () => 2 });
+        (User.findOne as unknown as jest.Mock).mockResolvedValue({ getDataValue: () => 2 });
 
         await expect(
             typedLeagueResolvers.Mutation.inviteUserToLeague(
@@ -301,10 +301,10 @@ describe('Mutation.inviteUserToLeague', () => {
     });
 
     it('throws if invited user not found', async () => {
-        (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-        (League.findOne as jest.Mock).mockResolvedValue({ getDataValue: (k: string) => (k === 'id_league' ? 1 : 'abcdefg') });
-        (UserLeague.findOne as jest.Mock).mockResolvedValueOnce({}); // userLeague
-        (User.findOne as jest.Mock).mockResolvedValue(null);
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockUser);
+        (League.findOne as unknown as jest.Mock).mockResolvedValue({ getDataValue: (k: string) => (k === 'id_league' ? 1 : 'abcdefg') });
+        (UserLeague.findOne as unknown as jest.Mock).mockResolvedValueOnce({}); // userLeague
+        (User.findOne as unknown as jest.Mock).mockResolvedValue(null);
 
         await expect(
             typedLeagueResolvers.Mutation.inviteUserToLeague(
@@ -316,8 +316,8 @@ describe('Mutation.inviteUserToLeague', () => {
     });
 
     it('throws if league not found', async () => {
-        (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-        (League.findOne as jest.Mock).mockResolvedValue(null);
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockUser);
+        (League.findOne as unknown as jest.Mock).mockResolvedValue(null);
 
         await expect(
             typedLeagueResolvers.Mutation.inviteUserToLeague(
@@ -329,9 +329,9 @@ describe('Mutation.inviteUserToLeague', () => {
     });
 
     it('throws if user not member', async () => {
-        (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-        (League.findOne as jest.Mock).mockResolvedValue({ getDataValue: (k: string) => (k === 'id_league' ? 1 : 'abcdefg') });
-        (UserLeague.findOne as jest.Mock).mockResolvedValueOnce(null);
+        (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockUser);
+        (League.findOne as unknown as jest.Mock).mockResolvedValue({ getDataValue: (k: string) => (k === 'id_league' ? 1 : 'abcdefg') });
+        (UserLeague.findOne as unknown as jest.Mock).mockResolvedValueOnce(null);
 
         await expect(
             typedLeagueResolvers.Mutation.inviteUserToLeague(
@@ -345,9 +345,9 @@ describe('Mutation.inviteUserToLeague', () => {
 
 describe('Mutation.acceptInvitationToLeague', () => {
     it('joins league if all ok', async () => {
-        (League.findOne as jest.Mock).mockResolvedValue({ getDataValue: (k: string) => (k === 'id_league' ? 1 : 'abcdefg') });
-        (UserLeague.findOne as jest.Mock).mockResolvedValue(null);
-        (UserLeague.create as jest.Mock).mockResolvedValue({});
+        (League.findOne as unknown as jest.Mock).mockResolvedValue({ getDataValue: (k: string) => (k === 'id_league' ? 1 : 'abcdefg') });
+        (UserLeague.findOne as unknown as jest.Mock).mockResolvedValue(null);
+        (UserLeague.create as unknown as jest.Mock).mockResolvedValue({});
 
         const result = await typedLeagueResolvers.Mutation.acceptInvitationToLeague(
             {},
@@ -358,7 +358,7 @@ describe('Mutation.acceptInvitationToLeague', () => {
     });
 
     it('throws if league not found', async () => {
-        (League.findOne as jest.Mock).mockResolvedValue(null);
+        (League.findOne as unknown as jest.Mock).mockResolvedValue(null);
 
         await expect(
             typedLeagueResolvers.Mutation.acceptInvitationToLeague(
@@ -370,8 +370,8 @@ describe('Mutation.acceptInvitationToLeague', () => {
     });
 
     it('throws if already member', async () => {
-        (League.findOne as jest.Mock).mockResolvedValue({ getDataValue: (k: string) => (k === 'id_league' ? 1 : 'abcdefg') });
-        (UserLeague.findOne as jest.Mock).mockResolvedValue({});
+        (League.findOne as unknown as jest.Mock).mockResolvedValue({ getDataValue: (k: string) => (k === 'id_league' ? 1 : 'abcdefg') });
+        (UserLeague.findOne as unknown as jest.Mock).mockResolvedValue({});
 
         await expect(
             typedLeagueResolvers.Mutation.acceptInvitationToLeague(

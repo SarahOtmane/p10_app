@@ -51,21 +51,21 @@ beforeEach(() => {
 describe('gpResolvers', () => {
     describe('Query', () => {
         it('getAllGPs returns all GPs', async () => {
-            (GP.findAll as jest.Mock).mockResolvedValue([mockGP]);
+            (GP.findAll as unknown as unknown as unknown as jest.Mock).mockResolvedValue([mockGP]);
             const result = await gpResolvers.Query.getAllGPs();
             expect(GP.findAll).toHaveBeenCalled();
             expect(result).toEqual([mockGP]);
         });
 
         it('getGPById returns GP by id', async () => {
-            (GP.findByPk as jest.Mock).mockResolvedValue(mockGP);
+            (GP.findByPk as unknown as unknown as unknown as jest.Mock).mockResolvedValue(mockGP);
             const result = await gpResolvers.Query.getGPById(null, { id_api_races: 1 });
             expect(GP.findByPk).toHaveBeenCalledWith(1);
             expect(result).toEqual(mockGP);
         });
 
         it('getGPById throws error if GP not found', async () => {
-            (GP.findByPk as jest.Mock).mockResolvedValue(null);
+            (GP.findByPk as unknown as unknown as unknown as jest.Mock).mockResolvedValue(null);
             await expect(
                 gpResolvers.Query.getGPById(null, { id_api_races: 999 })
             ).rejects.toThrow('GP introuvable.');
@@ -94,52 +94,52 @@ describe('gpResolvers', () => {
             };
 
             it('throws error if user not authenticated', async () => {
-                (requireAdmin as jest.Mock).mockReturnValue({});
+                (requireAdmin as unknown as unknown as unknown as jest.Mock).mockReturnValue({});
                 await expect(
                     gpResolvers.Mutation.importGPsAndTracks(null, { year: '2023' }, context)
                 ).rejects.toThrow('Utilisateur non authentifié.');
             });
 
             it('throws error if user not found', async () => {
-                (requireAdmin as jest.Mock).mockReturnValue({ id_user: 1 });
-                (User.findByPk as jest.Mock).mockResolvedValue(null);
+                (requireAdmin as unknown as unknown as unknown as jest.Mock).mockReturnValue({ id_user: 1 });
+                (User.findByPk as unknown as unknown as unknown as jest.Mock).mockResolvedValue(null);
                 await expect(
                     gpResolvers.Mutation.importGPsAndTracks(null, { year: '2023' }, context)
                 ).rejects.toThrow('Utilisateur non trouvé.');
             });
 
             it('imports GPs and tracks', async () => {
-                (requireAdmin as jest.Mock).mockReturnValue({ id_user: 1 });
-                (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-                (fetch as jest.Mock).mockResolvedValue({
+                (requireAdmin as unknown as unknown as unknown as jest.Mock).mockReturnValue({ id_user: 1 });
+                (User.findByPk as unknown as unknown as unknown as jest.Mock).mockResolvedValue(mockUser);
+                (fetch as unknown as unknown as unknown as jest.Mock).mockResolvedValue({
                     json: jest.fn().mockResolvedValue(racesApiResponse)
                 });
-                (Tracks.findOne as jest.Mock).mockResolvedValue(null);
-                (Tracks.create as jest.Mock).mockResolvedValue(mockTrack);
-                (GP.findByPk as jest.Mock).mockResolvedValue(null);
-                (GP.create as jest.Mock).mockResolvedValue({});
+                (Tracks.findOne as unknown as unknown as unknown as jest.Mock).mockResolvedValue(null);
+                (Tracks.create as unknown as unknown as unknown as jest.Mock).mockResolvedValue(mockTrack);
+                (GP.findByPk as unknown as unknown as unknown as jest.Mock).mockResolvedValue(null);
+                (GP.create as unknown as unknown as unknown as jest.Mock).mockResolvedValue({});
 
                 const result = await gpResolvers.Mutation.importGPsAndTracks(null, { year: '2023' }, context);
                 expect(result).toContain("1 GPs et 1 tracks importés pour la saison 2023.");
             });
 
             it('skips existing tracks and GPs', async () => {
-                (requireAdmin as jest.Mock).mockReturnValue({ id_user: 1 });
-                (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-                (fetch as jest.Mock).mockResolvedValue({
+                (requireAdmin as unknown as unknown as unknown as jest.Mock).mockReturnValue({ id_user: 1 });
+                (User.findByPk as unknown as unknown as unknown as jest.Mock).mockResolvedValue(mockUser);
+                (fetch as unknown as unknown as unknown as jest.Mock).mockResolvedValue({
                     json: jest.fn().mockResolvedValue(racesApiResponse)
                 });
-                (Tracks.findOne as jest.Mock).mockResolvedValue(mockTrack);
-                (GP.findByPk as jest.Mock).mockResolvedValue(true);
+                (Tracks.findOne as unknown as unknown as unknown as jest.Mock).mockResolvedValue(mockTrack);
+                (GP.findByPk as unknown as unknown as unknown as jest.Mock).mockResolvedValue(true);
 
                 const result = await gpResolvers.Mutation.importGPsAndTracks(null, { year: '2023' }, context);
                 expect(result).toContain('0 GPs et 0 tracks importés');
             });
 
             it('throws error if fetch fails', async () => {
-                (requireAdmin as jest.Mock).mockReturnValue({ id_user: 1 });
-                (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-                (fetch as jest.Mock).mockResolvedValue(new Error('fetch failed'));
+                (requireAdmin as unknown as unknown as unknown as jest.Mock).mockReturnValue({ id_user: 1 });
+                (User.findByPk as unknown as unknown as unknown as jest.Mock).mockResolvedValue(mockUser);
+                (fetch as unknown as unknown as unknown as jest.Mock).mockResolvedValue(new Error('fetch failed'));
                 await expect(
                     gpResolvers.Mutation.importGPsAndTracks(null, { year: '2023' }, context)
                 ).rejects.toThrow("Échec de l'importation depuis l'API.");
@@ -150,34 +150,34 @@ describe('gpResolvers', () => {
             const input = { id_api_races: 1, season: '2024' };
 
             it('throws error if user not authenticated', async () => {
-                (requireAdmin as jest.Mock).mockReturnValue({});
+                (requireAdmin as unknown as unknown as unknown as jest.Mock).mockReturnValue({});
                 await expect(
                     gpResolvers.Mutation.updateGP(null, { input }, context)
                 ).rejects.toThrow('Utilisateur non authentifié.');
             });
 
             it('throws error if user not found', async () => {
-                (requireAdmin as jest.Mock).mockReturnValue({ id_user: 1 });
-                (User.findByPk as jest.Mock).mockResolvedValue(null);
+                (requireAdmin as unknown as unknown as unknown as jest.Mock).mockReturnValue({ id_user: 1 });
+                (User.findByPk as unknown as unknown as unknown as jest.Mock).mockResolvedValue(null);
                 await expect(
                     gpResolvers.Mutation.updateGP(null, { input }, context)
                 ).rejects.toThrow('Utilisateur non trouvé.');
             });
 
             it('throws error if GP not found', async () => {
-                (requireAdmin as jest.Mock).mockReturnValue({ id_user: 1 });
-                (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-                (GP.findByPk as jest.Mock).mockResolvedValue(null);
+                (requireAdmin as unknown as unknown as unknown as jest.Mock).mockReturnValue({ id_user: 1 });
+                (User.findByPk as unknown as unknown as unknown as jest.Mock).mockResolvedValue(mockUser);
+                (GP.findByPk as unknown as unknown as unknown as jest.Mock).mockResolvedValue(null);
                 await expect(
                     gpResolvers.Mutation.updateGP(null, { input }, context)
                 ).rejects.toThrow('Grand Prix introuvable.');
             });
 
             it('updates GP and returns updated GP', async () => {
-                (requireAdmin as jest.Mock).mockReturnValue({ id_user: 1 });
-                (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
+                (requireAdmin as unknown as unknown as unknown as jest.Mock).mockReturnValue({ id_user: 1 });
+                (User.findByPk as unknown as unknown as unknown as jest.Mock).mockResolvedValue(mockUser);
                 const gpInstance = { ...mockGP, update: jest.fn().mockResolvedValue(true) };
-                (GP.findByPk as jest.Mock).mockResolvedValue(gpInstance);
+                (GP.findByPk as unknown as unknown as unknown as jest.Mock).mockResolvedValue(gpInstance);
 
                 const result = await gpResolvers.Mutation.updateGP(null, { input }, context);
                 expect(gpInstance.update).toHaveBeenCalledWith({ season: '2024' });
@@ -185,10 +185,10 @@ describe('gpResolvers', () => {
             });
 
             it('throws error if update fails', async () => {
-                (requireAdmin as jest.Mock).mockReturnValue({ id_user: 1 });
-                (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
+                (requireAdmin as unknown as unknown as unknown as jest.Mock).mockReturnValue({ id_user: 1 });
+                (User.findByPk as unknown as unknown as unknown as jest.Mock).mockResolvedValue(mockUser);
                 const gpInstance = { ...mockGP, update: jest.fn().mockRejectedValue(new Error('fail')) };
-                (GP.findByPk as jest.Mock).mockResolvedValue(gpInstance);
+                (GP.findByPk as unknown as unknown as unknown as jest.Mock).mockResolvedValue(gpInstance);
 
                 await expect(
                     gpResolvers.Mutation.updateGP(null, { input }, context)
