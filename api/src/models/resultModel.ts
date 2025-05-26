@@ -17,7 +17,7 @@ const Results = sequelize.define('Results', {
   },
   point_p10: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: true
   },
   id_pilote_p10: {
     type: DataTypes.INTEGER,

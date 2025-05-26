@@ -81,7 +81,6 @@ const gpResolvers = {
           throw new Error("Échec de l'importation depuis l'API.");
         }
     },
-
     updateGP: async (_: any, { input }: any, context: MyContext) => {
         // Vérifie que l'utilisateur est un admin
         const user = requireAdmin(context);

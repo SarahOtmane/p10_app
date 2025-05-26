@@ -2,7 +2,7 @@ import { IResolvers } from '@graphql-tools/utils';
 import Ecurie from '../../models/ecurieModel';
 import { MyContext } from '../../types/context';
 import { User } from '../../models';
-import { requireAuth } from '../../utils/auth';
+import { requireAdmin, requireAuth } from '../../utils/auth';
 
 const ecurieResolvers: IResolvers = {
     Query: {
@@ -15,8 +15,11 @@ const ecurieResolvers: IResolvers = {
     },
 
     Mutation: {
+        //Fonction qui permet de modifier une écurie
+        // L'utilisateur doit être administrateur pour pouvoir modifier une écurie
         updateEcurie: async (_: any, { input }: any, context: MyContext) => {
-            const user = requireAuth(context);
+            const user = requireAdmin(context);
+
             const userId = user.id_user;
             if (!userId) {
                 throw new Error("Utilisateur non authentifié.");
