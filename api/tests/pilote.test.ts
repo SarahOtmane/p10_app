@@ -120,7 +120,7 @@ describe('piloteResolvers', () => {
             beforeEach(() => {
                 (requireAdmin as unknown as jest.Mock).mockReturnValue(mockUser);
                 (User.findByPk as unknown as jest.Mock).mockResolvedValue(mockUser);
-                (fetch as unknown as jest.Mock).mockResolvedValue({
+                (fetch as unknown as unknown as jest.Mock).mockResolvedValue({
                     json: jest.fn().mockResolvedValue(driverData)
                 });
                 (Ecurie.findOrCreate as unknown as jest.Mock).mockResolvedValue([mockEcurie]);
