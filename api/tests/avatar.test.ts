@@ -27,14 +27,14 @@ describe('avatarResolvers', () => {
   describe('Query', () => {
     describe('getAllAvatars', () => {
       it('should return all avatars', async () => {
-        (Avatar.findAll as unknown as unknown as jest.Mock).mockResolvedValue([{ id_avatar: 1 }]);
+        (Avatar.findAll as unknown as jest.Mock).mockResolvedValue([{ id_avatar: 1 }]);
         const result = await (avatarResolvers.Query as any).getAllAvatars();
         expect(Avatar.findAll).toHaveBeenCalled();
         expect(result).toEqual([{ id_avatar: 1 }]);
       });
 
       it('should throw error on DB error', async () => {
-        (Avatar.findAll as unknown as unknown as jest.Mock).mockRejectedValue(new Error('DB error'));
+        (Avatar.findAll as unknown as jest.Mock).mockRejectedValue(new Error('DB error'));
         await expect((avatarResolvers.Query as any).getAllAvatars()).rejects.toThrow(
           "Erreur lors du traitement des données."
         );
@@ -45,9 +45,9 @@ describe('avatarResolvers', () => {
   describe('Mutation', () => {
     describe('addAvatar', () => {
       it('should add avatar successfully', async () => {
-        (fs.ensureDir as unknown as unknown as jest.Mock).mockResolvedValue(undefined);
-        (fs.writeFile as unknown as unknown as unknown as jest.Mock).mockResolvedValue(undefined);
-        (Avatar.create as unknown as unknown as jest.Mock).mockResolvedValue({ picture_avatar: 'test.png' });
+        (fs.ensureDir as unknown as jest.Mock).mockResolvedValue(undefined);
+        (fs.writeFile as unknown as jest.Mock).mockResolvedValue(undefined);
+        (Avatar.create as unknown as jest.Mock).mockResolvedValue({ picture_avatar: 'test.png' });
 
         const input = {
           filename: 'test.png',
@@ -66,7 +66,7 @@ describe('avatarResolvers', () => {
       });
 
       it('should throw error on fs or DB error', async () => {
-        (fs.ensureDir as unknown as unknown as jest.Mock).mockRejectedValue(new Error('FS error'));
+        (fs.ensureDir as unknown as jest.Mock).mockRejectedValue(new Error('FS error'));
         const input = {
           filename: 'test.png',
           base64Image: 'data:image/png;base64,aGVsbG8=',
@@ -79,8 +79,8 @@ describe('avatarResolvers', () => {
 
     describe('updateAvatar', () => {
       it('should update avatar successfully', async () => {
-        (Avatar.findByPk as unknown as unknown as jest.Mock).mockResolvedValue({ id_avatar: 1 });
-        (Avatar.update as unknown as unknown as jest.Mock).mockResolvedValue([1]);
+        (Avatar.findByPk as unknown as jest.Mock).mockResolvedValue({ id_avatar: 1 });
+        (Avatar.update as unknown as jest.Mock).mockResolvedValue([1]);
 
         const result = await (avatarResolvers.Mutation as any).updateAvatar(
           null,
@@ -96,7 +96,7 @@ describe('avatarResolvers', () => {
       });
 
       it('should throw error if avatar does not exist', async () => {
-        (Avatar.findByPk as unknown as unknown as jest.Mock).mockResolvedValue(null);
+        (Avatar.findByPk as unknown as jest.Mock).mockResolvedValue(null);
         await expect(
           (avatarResolvers.Mutation as any).updateAvatar(
             null,
@@ -107,7 +107,7 @@ describe('avatarResolvers', () => {
       });
 
       it('should throw error on DB error', async () => {
-        (Avatar.findByPk as unknown as unknown as jest.Mock).mockRejectedValue(new Error('DB error'));
+        (Avatar.findByPk  as unknown as jest.Mock).mockRejectedValue(new Error('DB error'));
         await expect(
           (avatarResolvers.Mutation as any).updateAvatar(
             null,
@@ -120,8 +120,8 @@ describe('avatarResolvers', () => {
 
     describe('deleteAvatar', () => {
       it('should delete avatar successfully', async () => {
-        (Avatar.findByPk as unknown as unknown as jest.Mock).mockResolvedValue({ id_avatar: 1 });
-        (Avatar.destroy as unknown as unknown as jest.Mock).mockResolvedValue(1);
+        (Avatar.findByPk as unknown as jest.Mock).mockResolvedValue({ id_avatar: 1 });
+        (Avatar.destroy as unknown as jest.Mock).mockResolvedValue(1);
 
         const result = await (avatarResolvers.Mutation as any).deleteAvatar(
           null,
@@ -134,7 +134,7 @@ describe('avatarResolvers', () => {
       });
 
       it('should throw error if avatar does not exist', async () => {
-        (Avatar.findByPk as unknown as unknown as jest.Mock).mockResolvedValue(null);
+        (Avatar.findByPk as unknown as jest.Mock).mockResolvedValue(null);
         await expect(
           (avatarResolvers.Mutation as any).deleteAvatar(
             null,
@@ -145,7 +145,7 @@ describe('avatarResolvers', () => {
       });
 
       it('should throw error on DB error', async () => {
-        (Avatar.findByPk as unknown as unknown as jest.Mock).mockRejectedValue(new Error('DB error'));
+        (Avatar.findByPk  as unknown as jest.Mock).mockRejectedValue(new Error('DB error'));
         await expect(
           (avatarResolvers.Mutation as any).deleteAvatar(
             null,
@@ -158,8 +158,8 @@ describe('avatarResolvers', () => {
 
     describe('replaceUserAvatar', () => {
       it('should replace user avatar successfully', async () => {
-        (Avatar.findByPk as unknown as unknown as jest.Mock).mockResolvedValue({ id_avatar: 2 });
-        (User.update as unknown as unknown as jest.Mock).mockResolvedValue([1]);
+        (Avatar.findByPk as unknown as jest.Mock).mockResolvedValue({ id_avatar: 2 });
+        (User.update as unknown as jest.Mock).mockResolvedValue([1]);
 
         const result = await (avatarResolvers.Mutation as any).replaceUserAvatar(
           null,
@@ -186,7 +186,7 @@ describe('avatarResolvers', () => {
       });
 
       it('should throw error if avatar does not exist', async () => {
-        (Avatar.findByPk as unknown as unknown as jest.Mock).mockResolvedValue(null);
+        (Avatar.findByPk as unknown as jest.Mock).mockResolvedValue(null);
         await expect(
           (avatarResolvers.Mutation as any).replaceUserAvatar(
             null,
@@ -197,7 +197,7 @@ describe('avatarResolvers', () => {
       });
 
       it('should throw error on DB error', async () => {
-        (Avatar.findByPk as unknown as unknown as jest.Mock).mockRejectedValue(new Error('DB error'));
+        (Avatar.findByPk as unknown as jest.Mock).mockRejectedValue(new Error('DB error'));
         await expect(
           (avatarResolvers.Mutation as any).replaceUserAvatar(
             null,
