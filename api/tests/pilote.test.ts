@@ -120,7 +120,7 @@ describe('piloteResolvers', () => {
             beforeEach(() => {
                 (requireAdmin as jest.Mock).mockReturnValue(mockUser);
                 (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-                (fetch as jest.Mock).mockResolvedValue({
+                (fetch as unknown as jest.Mock).mockResolvedValue({
                     json: jest.fn().mockResolvedValue(driverData)
                 });
                 (Ecurie.findOrCreate as jest.Mock).mockResolvedValue([mockEcurie]);
@@ -155,7 +155,7 @@ describe('piloteResolvers', () => {
             });
 
             it('should throw if fetch fails', async () => {
-                (fetch as jest.Mock).mockRejectedValue(new Error('fetch error'));
+                (fetch as unknown as jest.Mock).mockRejectedValue(new Error('fetch error'));
                 await expect(
                     (piloteResolvers.Mutation as any).importDriversFromOpenF1(null, null, context)
                 ).rejects.toThrow("Une erreur est survenue pendant l'importation.");

@@ -111,7 +111,7 @@ describe('gpResolvers', () => {
             it('imports GPs and tracks', async () => {
                 (requireAdmin as jest.Mock).mockReturnValue({ id_user: 1 });
                 (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-                (fetch as jest.Mock).mockResolvedValue({
+                (fetch as unknown as jest.Mock).mockResolvedValue({
                     json: jest.fn().mockResolvedValue(racesApiResponse)
                 });
                 (Tracks.findOne as jest.Mock).mockResolvedValue(null);
@@ -126,7 +126,7 @@ describe('gpResolvers', () => {
             it('skips existing tracks and GPs', async () => {
                 (requireAdmin as jest.Mock).mockReturnValue({ id_user: 1 });
                 (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-                (fetch as jest.Mock).mockResolvedValue({
+                (fetch as unknown as jest.Mock).mockResolvedValue({
                     json: jest.fn().mockResolvedValue(racesApiResponse)
                 });
                 (Tracks.findOne as jest.Mock).mockResolvedValue(mockTrack);
@@ -139,7 +139,7 @@ describe('gpResolvers', () => {
             it('throws error if fetch fails', async () => {
                 (requireAdmin as jest.Mock).mockReturnValue({ id_user: 1 });
                 (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-                (fetch as jest.Mock).mockResolvedValue(new Error('fetch failed'));
+                (fetch as unknown as jest.Mock).mockResolvedValue(new Error('fetch failed'));
                 await expect(
                     gpResolvers.Mutation.importGPsAndTracks(null, { year: '2023' }, context)
                 ).rejects.toThrow("Échec de l'importation depuis l'API.");

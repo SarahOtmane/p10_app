@@ -80,7 +80,7 @@ describe('gpClassementResolvers', () => {
     });
 
     it('should throw if fetch dates returns invalid data', async () => {
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as unknown as jest.Mock).mockResolvedValueOnce({
         json: async () => ({ not: 'an array' })
       });
       await expect(
@@ -89,7 +89,7 @@ describe('gpClassementResolvers', () => {
     });
 
     it('should throw if classement fetch returns error', async () => {
-      (fetch as jest.Mock)
+      (fetch as unknown as jest.Mock)
         .mockResolvedValueOnce({
           json: async () => [{ date: '2024-05-01' }]
         })
@@ -102,7 +102,7 @@ describe('gpClassementResolvers', () => {
     });
 
     it('should throw if GP not found', async () => {
-      (fetch as jest.Mock)
+      (fetch as unknown as jest.Mock)
         .mockResolvedValueOnce({
           json: async () => [{ date: '2024-05-01' }]
         })
@@ -118,7 +118,7 @@ describe('gpClassementResolvers', () => {
     });
 
     it('should throw if ecurie not found', async () => {
-      (fetch as jest.Mock)
+      (fetch as unknown as jest.Mock)
         .mockResolvedValueOnce({
           json: async () => [{ date: '2024-05-01' }]
         })
@@ -138,7 +138,7 @@ describe('gpClassementResolvers', () => {
 
   describe('Mutation.implementLatestGpClassement', () => {
     it('should import latest classement successfully', async () => {
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as unknown as jest.Mock).mockResolvedValueOnce({
         json: async () => [
           { driver: 'Lewis Hamilton', team: 'Mercedes', position: '1', scraped_at: '2024-05-01T12:00:00Z' }
         ]
@@ -172,7 +172,7 @@ describe('gpClassementResolvers', () => {
     });
 
     it('should throw if classement fetch returns invalid data', async () => {
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as unknown as jest.Mock).mockResolvedValueOnce({
         json: async () => ({ not: 'an array' })
       });
       await expect(
@@ -181,7 +181,7 @@ describe('gpClassementResolvers', () => {
     });
 
     it('should throw if scraped_at missing', async () => {
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as unknown as jest.Mock).mockResolvedValueOnce({
         json: async () => [{ driver: 'Lewis Hamilton', team: 'Mercedes', position: '1' }]
       });
       await expect(
@@ -190,7 +190,7 @@ describe('gpClassementResolvers', () => {
     });
 
     it('should throw if GP not found', async () => {
-      (fetch as jest.Mock).mockResolvedValueOnce({
+      (fetch as unknown as jest.Mock).mockResolvedValueOnce({
         json: async () => [
           { driver: 'Lewis Hamilton', team: 'Mercedes', position: '1', scraped_at: '2024-05-01T12:00:00Z' }
         ]
