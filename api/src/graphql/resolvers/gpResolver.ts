@@ -17,7 +17,6 @@ const gpResolvers = {
   },
 
   Mutation: {
-    // Importer les GPs et les circuits depuis l'API
     importGPsAndTracks: async (_: any, { year }: { year: string }, context: MyContext) => {
         // Vérification d'autorisation
         const user = requireAdmin(context);
@@ -82,8 +81,6 @@ const gpResolvers = {
           throw new Error("Échec de l'importation depuis l'API.");
         }
     },
-
-    // Mettre à jour un GP
     updateGP: async (_: any, { input }: any, context: MyContext) => {
         // Vérifie que l'utilisateur est un admin
         const user = requireAdmin(context);

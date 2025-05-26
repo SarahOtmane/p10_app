@@ -18,8 +18,6 @@ const piloteResolvers: IResolvers = {
     },
 
     Mutation: {
-        // Fonction pour importer les pilotes et les écuries depuis l'API OpenF1
-        // L'utilisateur doit être administrateur pour pouvoir importer les pilotes
         importDriversFromOpenF1: async (_: any, __: any, context: any) => {
             const user = requireAdmin(context);
             const userId = user.id_user;    

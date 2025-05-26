@@ -34,6 +34,7 @@ const gpClassementResolvers = {
         context: MyContext
     ) => {
         const user = requireAdmin(context);
+
         const userId = user.id_user;
         if (!userId) {
           throw new Error("Utilisateur non authentifié.");
@@ -217,6 +218,7 @@ const gpClassementResolvers = {
     },
 
     // Fonction pour implémenter le classement du dernier GP
+
     implementLatestGpClassement: async (
       _: any,
       __: any,

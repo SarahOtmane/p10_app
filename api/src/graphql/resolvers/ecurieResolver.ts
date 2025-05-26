@@ -19,6 +19,7 @@ const ecurieResolvers: IResolvers = {
         // L'utilisateur doit être administrateur pour pouvoir modifier une écurie
         updateEcurie: async (_: any, { input }: any, context: MyContext) => {
             const user = requireAdmin(context);
+
             const userId = user.id_user;
             if (!userId) {
                 throw new Error("Utilisateur non authentifié.");
