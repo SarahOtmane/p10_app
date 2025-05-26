@@ -1,10 +1,10 @@
 {
   "name": "app",
   "version": "1.0.0",
-  "main": "dist/app.js",
+  "main": "dist/src/app.js",
   "scripts": {
     "test": "DATABASE_URL=postgres://user:pass@localhost:5432/db jest --forceExit --detectOpenHandles",
-    "start": "tsc && node dist/app.js"
+    "start": "tsc && node dist/src/app.js"
   },
   "author": "",
   "license": "ISC",
