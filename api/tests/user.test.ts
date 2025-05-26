@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { requireAuth } from '../src/utils/auth';
 import 'dotenv/config';
+import { MyContext } from '../src/types/context';
 
 // api/src/graphql/resolvers/userResolvers.test.ts
 
@@ -30,6 +31,7 @@ const mockUser = {
   update: jest.fn(),
 };
 
+
 describe('userResolvers', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -39,7 +41,7 @@ describe('userResolvers', () => {
     describe('users', () => {
       it('should return all users', async () => {
         (User.findAll as jest.Mock).mockResolvedValue([mockUser]);
-        const users = await userResolvers.Query.users();
+        const users = await userResolvers.Query.users({}, {}, null);
         expect(User.findAll).toHaveBeenCalledWith({ attributes: { exclude: ['password'] } });
         expect(users).toEqual([mockUser]);
       });
@@ -48,14 +50,14 @@ describe('userResolvers', () => {
     describe('user', () => {
       it('should return a user by id', async () => {
         (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-        const user = await userResolvers.Query.user(null, { id: '1' });
+        const user = await userResolvers.Query.user({}, null, mockUser.id_user);
         expect(User.findByPk).toHaveBeenCalledWith('1', { attributes: { exclude: ['password'] } });
         expect(user).toEqual(mockUser);
       });
 
       it('should return null if user not found', async () => {
         (User.findByPk as jest.Mock).mockResolvedValue(null);
-        const user = await userResolvers.Query.user(null, { id: '2' });
+        const user = await userResolvers.Query.user({}, null, { id: '2' });
         expect(user).toBeNull();
       });
     });

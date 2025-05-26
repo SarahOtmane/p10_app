@@ -60,7 +60,7 @@ describe('resultResolvers', () => {
         (Result.findOne as jest.Mock).mockResolvedValue({ id_result: 5, id_user: 123 });
         const result = await (resultResolvers.Query as any).getResultOfUserById(
           null,
-          { id: 5 },
+          { id_result: 5 },
           mockContext
         );
         expect(requireAuth).toHaveBeenCalledWith(mockContext);
@@ -94,7 +94,7 @@ describe('resultResolvers', () => {
         (Result.findOne as jest.Mock).mockResolvedValue(null);
         await expect(
           (resultResolvers.Query as any).getResultOfUserById(null, { id: 5 }, mockContext)
-        ).rejects.toThrow("Résultat introuvable ou accès non autorisé.");
+        ).rejects.toThrow("Résultat introuvable");
       });
     });
   });

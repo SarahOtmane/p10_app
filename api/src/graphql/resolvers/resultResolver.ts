@@ -16,7 +16,7 @@ const resultResolvers = {
         where: { id_user: userId },
         include: [
           { model: GP },
-          { model: User, attributes: ['id_user', 'email'] }
+          { model: User, attributes: ['id', 'email'] }
         ]
       });
     },
@@ -28,16 +28,16 @@ const resultResolvers = {
 
       const result = await Result.findOne({
         where: {
-          id_result: id,
+          id: id,
           id_user: userId
         },
         include: [
           { model: GP },
-          { model: User, attributes: ['id_user', 'email'] }
+          { model: User, attributes: ['id', 'email'] }
         ]
       });
 
-      if (!result) throw new Error("Résultat introuvable ou accès non autorisé.");
+      if (!result) throw new Error("Résultat introuvable");
       return result;
     }
   }

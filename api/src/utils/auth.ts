@@ -9,7 +9,7 @@ export function requireAuth(context: MyContext) {
 }
 
 export function requireAdmin(context: MyContext) {
-  const user = requireAuth(context);
+  const user = context.req.user;
   if (user.role !== 'admin') {
     throw new Error("Accès interdit : rôle administrateur requis.");
   }

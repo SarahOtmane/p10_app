@@ -2,14 +2,35 @@ import User from '../../models/userModel';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { MyContext } from '../../types/context';
-import { requireAuth } from '../../utils/auth';
+import { requireAdmin, requireAuth } from '../../utils/auth';
 
 const userResolvers = {
   Query: {
-    users: async () => {
+    users: async (_: any,__: any, context: MyContext) => {
+      const user = requireAdmin(context);
+      const userId = user.id_user;
+      if (!userId) {
+          throw new Error("Utilisateur non authentifié.");
+      }
+      
+      const existingUser = await User.findByPk(userId);
+      if (!existingUser) {
+        throw new Error("Utilisateur non trouvé.");
+      }
       return await User.findAll({ attributes: { exclude: ['password'] } });
     },
-    user: async (_: any, { id }: { id: string }) => {
+
+    user: async (_: any,__: any, context: MyContext) => {
+      const user = requireAuth(context);
+      const id = user.id_user;
+      if (!id) {
+          throw new Error("Utilisateur non authentifié.");
+      }
+      
+      const existingUser = await User.findByPk(id);
+      if (!existingUser) {
+        throw new Error("Utilisateur non trouvé.");
+      }
       return await User.findByPk(id, { attributes: { exclude: ['password'] } });
     }
   },
