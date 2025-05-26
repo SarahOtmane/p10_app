@@ -45,7 +45,7 @@ const mockUser = {
     update: jest.fn(),
 };
 
-const mockContext = (user: any = mockUser) => ({ req: { user } });
+const mockContext = (user: any = mockUser) => ({ req: { user: user ?? mockUser } });
 
 beforeAll(() => {
     jest.spyOn(authUtils, 'requireAuth').mockImplementation((ctx: any) => {
@@ -109,7 +109,7 @@ describe('Query.getAllLeaguesOfUser', () => {
         (League.findAll as jest.Mock).mockResolvedValue([{ id_league: 1 }]);
         const adminUser = { ...mockUser, role: 'admin', id_user: 1 };
         const context = mockContext(adminUser);
-        const result = await typedLeagueResolvers.Query.getAllLeaguesOfUser({}, context);
+        const result = await typedLeagueResolvers.Query.getAllLeaguesOfUser({}, {}, context);
         expect(result).toEqual([{ id_league: 1 }]);
     });
 
@@ -125,7 +125,7 @@ describe('Query.getAllLeaguesOfUser', () => {
         const context = mockContext({ ...mockUser, role: 'admin' });
         await expect(
             typedLeagueResolvers.Query.getAllLeaguesOfUser({}, {}, context)
-        ).rejects.toThrow("Utilisateur non authentifié.");
+        ).rejects.toThrow("Utilisateur non trouvé.");
     });
 });
 
@@ -133,7 +133,7 @@ describe('Query.getAllLeagues', () => {
     it('returns all leagues', async () => {
         (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
         (League.findAll as jest.Mock).mockResolvedValue([{ id_league: 1 }]);
-        const result = await typedLeagueResolvers.Query.getAllLeagues({}, mockContext());
+        const result = await typedLeagueResolvers.Query.getAllLeagues({}, {}, mockContext());
         expect(result).toEqual([{ id_league: 1 }]);
     });
 
@@ -147,7 +147,7 @@ describe('Query.getAllLeagues', () => {
         (User.findByPk as jest.Mock).mockResolvedValue(null);
         await expect(
             typedLeagueResolvers.Query.getAllLeagues({}, {}, mockContext())
-        ).rejects.toThrow('Utilisateur non authentifié.');
+        ).rejects.toThrow("Utilisateur non trouvé.");
     });
 });
 

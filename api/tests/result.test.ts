@@ -32,7 +32,7 @@ describe('resultResolvers', () => {
           where: { id_user: 123 },
           include: [
             { model: GP },
-            { model: User, attributes: ['id_user', 'email'] }
+            { model: User, attributes: ['id', 'email'] }
           ]
         });
         expect(results).toEqual([{ id_result: 1 }, { id_result: 2 }]);
@@ -57,21 +57,21 @@ describe('resultResolvers', () => {
     describe('getResultOfUserById', () => {
       it('should return the result if it exists and belongs to user', async () => {
         (requireAuth as jest.Mock).mockReturnValue({ id_user: 123 });
-        (Result.findOne as jest.Mock).mockResolvedValue({ id_result: 5, id_user: 123 });
+        (Result.findOne as jest.Mock).mockResolvedValue({ id: 5, id_user: 123 });
         const result = await (resultResolvers.Query as any).getResultOfUserById(
           null,
-          { id_result: 5 },
+          { id: 5 },
           mockContext
         );
         expect(requireAuth).toHaveBeenCalledWith(mockContext);
         expect(Result.findOne).toHaveBeenCalledWith({
-          where: { id_result: 5, id_user: 123 },
+          where: { id: 5, id_user: 123 }, // <-- corriger ici
           include: [
             { model: GP },
-            { model: User, attributes: ['id_user', 'email'] }
+            { model: User, attributes: ['id', 'email'] }
           ]
         });
-        expect(result).toEqual({ id_result: 5, id_user: 123 });
+        expect(result).toEqual({ id: 5, id_user: 123 });
       });
 
       it('should throw if requireAuth throws', async () => {

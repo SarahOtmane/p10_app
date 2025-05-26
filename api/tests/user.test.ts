@@ -2,16 +2,20 @@ import userResolvers from '../src/graphql/resolvers/userResolvers';
 import User from '../src/models/userModel';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { requireAuth } from '../src/utils/auth';
+import { requireAuth, requireAdmin } from '../src/utils/auth';
 import 'dotenv/config';
 import { MyContext } from '../src/types/context';
+import { Request, Response } from 'express';
 
 // api/src/graphql/resolvers/userResolvers.test.ts
 
 jest.mock('../src/models/userModel');
 jest.mock('bcryptjs');
 jest.mock('jsonwebtoken');
-jest.mock('../src/utils/auth');
+jest.mock('../src/utils/auth', () => ({
+  requireAuth: jest.fn(),
+  requireAdmin: jest.fn(),
+}));
 
 const mockUser = {
   id: 1,
@@ -31,6 +35,39 @@ const mockUser = {
   update: jest.fn(),
 };
 
+const contextUser: MyContext = {
+  req: {
+    headers: {},
+    body: {},
+    query: {},
+    params: {},
+    method: 'GET',
+    url: '/api/example',
+    user: {
+      id_user: 1,
+      role: 'admin',
+      email: 'admin@example.com',
+    },
+  } as unknown as Request & {
+    user?: {
+      id_user: 1,
+      role: 'user',
+      email: 'test@example.com',
+    },
+  },
+  res: {} as Response,
+};
+
+const adminContext = {
+  req: {
+    user: {
+      id_user: 1,
+      role: 'admin',
+      email: 'admin@example.com',
+    },
+  },
+  res: {},
+};
 
 describe('userResolvers', () => {
   beforeEach(() => {
@@ -40,8 +77,10 @@ describe('userResolvers', () => {
   describe('Query', () => {
     describe('users', () => {
       it('should return all users', async () => {
+        (requireAdmin as jest.Mock).mockReturnValue({ id_user: 1, role: 'admin' });
+        (User.findByPk as jest.Mock).mockResolvedValue(mockUser); // <-- Ajoute ceci
         (User.findAll as jest.Mock).mockResolvedValue([mockUser]);
-        const users = await userResolvers.Query.users({}, {}, null);
+        const users = await userResolvers.Query.users({}, {}, contextUser);
         expect(User.findAll).toHaveBeenCalledWith({ attributes: { exclude: ['password'] } });
         expect(users).toEqual([mockUser]);
       });
@@ -49,16 +88,18 @@ describe('userResolvers', () => {
 
     describe('user', () => {
       it('should return a user by id', async () => {
+        (requireAuth as jest.Mock).mockReturnValue({ id_user: 1, role: 'admin' });
         (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
-        const user = await userResolvers.Query.user({}, null, mockUser.id_user);
-        expect(User.findByPk).toHaveBeenCalledWith('1', { attributes: { exclude: ['password'] } });
+        const user = await userResolvers.Query.user({}, null, contextUser);
+        expect(User.findByPk).toHaveBeenNthCalledWith(1, 1); // Premier appel avec 1 (nombre)
+        expect(User.findByPk).toHaveBeenNthCalledWith(2, 1, { attributes: { exclude: ['password'] } }); // Deuxième appel
         expect(user).toEqual(mockUser);
       });
 
-      it('should return null if user not found', async () => {
+      it('should throw error if user not found', async () => {
+        (requireAuth as jest.Mock).mockReturnValue({ id_user: 1, role: 'admin' });
         (User.findByPk as jest.Mock).mockResolvedValue(null);
-        const user = await userResolvers.Query.user({}, null, { id: '2' });
-        expect(user).toBeNull();
+        await expect(userResolvers.Query.user({}, null, contextUser)).rejects.toThrow("Utilisateur non trouvé.");
       });
     });
   });
