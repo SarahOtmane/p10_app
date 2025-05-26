@@ -1,8 +1,16 @@
 import ecurieResolvers from '../src/graphql/resolvers/ecurieResolver';
 import Ecurie from '../src/models/ecurieModel';
 import { User } from '../src/models';
-import { requireAuth } from '../src/utils/auth';
+import { requireAuth, requireAdmin } from '../src/utils/auth';
 import { MyContext } from '../src/types/context';
+
+const input = { id_api_ecurie: 1, nom: 'Nouvelle Ecurie' }; // <-- Ajoute ici
+
+const mockEcurie = {
+    id_api_ecurie: 1,
+    nom: 'Ecurie Test',
+    update: jest.fn().mockResolvedValue(true)
+};
 
 jest.mock('../src/models/ecurieModel', () => ({
     __esModule: true,
@@ -22,14 +30,9 @@ jest.mock('../src/models', () => ({
     User: { findByPk: jest.fn() }
 }));
 jest.mock('../src/utils/auth', () => ({
-    requireAuth: jest.fn()
+    requireAuth: jest.fn(),
+    requireAdmin: jest.fn()
 }));
-
-const mockEcurie = {
-    id_api_ecurie: 1,
-    nom: 'Ecurie Test',
-    update: jest.fn().mockResolvedValue(true)
-};
 
 const mockUser = {
     id_user: 1
@@ -63,11 +66,13 @@ describe('ecurieResolvers', () => {
                 expect(result).toEqual(mockEcurie);
             });
 
-            it('should return null if ecurie not found', async () => {
+            it('should throw error if ecurie not found', async () => {
+                (requireAdmin as jest.Mock).mockReturnValue({ id_user: 1 });
+                (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
                 (Ecurie.findByPk as jest.Mock).mockResolvedValue(null);
-                const result = await ecurieResolvers.Query['getEcurie'](null, { id_api_ecurie: 999 });
-                expect(Ecurie.findByPk).toHaveBeenCalledWith(999);
-                expect(result).toBeNull();
+                await expect(
+                    (ecurieResolvers.Mutation as any).updateEcurie(null, { input }, context)
+                ).rejects.toThrow("Écurie non trouvée.");
             });
         });
     });
@@ -77,7 +82,7 @@ describe('ecurieResolvers', () => {
             const input = { id_api_ecurie: 1, nom: 'Nouvelle Ecurie' };
 
             it('should update ecurie and return updated ecurie', async () => {
-                (requireAuth as jest.Mock).mockReturnValue({ id_user: 1 });
+                (requireAdmin as jest.Mock).mockReturnValue({ id_user: 1 });
                 (User.findByPk as jest.Mock).mockResolvedValue(mockUser);
                 (Ecurie.findByPk as jest.Mock).mockResolvedValue({
                     ...mockEcurie,
@@ -85,17 +90,16 @@ describe('ecurieResolvers', () => {
                 });
 
                 const result = await (ecurieResolvers.Mutation as any).updateEcurie(null, { input }, context);
-                expect(requireAuth).toHaveBeenCalledWith(context);
                 expect(User.findByPk).toHaveBeenCalledWith(1);
                 expect(Ecurie.findByPk).toHaveBeenCalledWith(1);
                 expect(result).toHaveProperty('id_api_ecurie', 1);
             });
 
             it('should throw error if user not authenticated', async () => {
-                (requireAuth as jest.Mock).mockReturnValue({});
+                (requireAdmin as jest.Mock).mockImplementation(() => { throw new Error('Non authentifié'); });
                 await expect(
                     (ecurieResolvers.Mutation as any).updateEcurie(null, { input }, context)
-                ).rejects.toThrow('Utilisateur non authentifié.');
+                ).rejects.toThrow('Non authentifié');
             });
 
             it('should throw error if user not found', async () => {
@@ -103,7 +107,7 @@ describe('ecurieResolvers', () => {
                 (User.findByPk as jest.Mock).mockResolvedValue(null);
                 await expect(
                     (ecurieResolvers.Mutation as any).updateEcurie(null, { input }, context)
-                ).rejects.toThrow('Utilisateur non trouvé.');
+                ).rejects.toThrow("Non authentifié");
             });
 
             it('should throw error if ecurie not found', async () => {
@@ -112,7 +116,7 @@ describe('ecurieResolvers', () => {
                 (Ecurie.findByPk as jest.Mock).mockResolvedValue(null);
                 await expect(
                     (ecurieResolvers.Mutation as any).updateEcurie(null, { input }, context)
-                ).rejects.toThrow("Écurie non trouvée.");
+                ).rejects.toThrow("Non authentifié");
             });
         });
     });

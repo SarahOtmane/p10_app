@@ -1,17 +1,31 @@
-import resultResolvers from '../src/graphql/resolvers/resultResolver';
-import Result from '../src/models/resultModel';
-import User from '../src/models/userModel';
-import GP from '../src/models/gpModel';
-import { requireAuth } from '../src/utils/auth';
-
-// api/src/graphql/resolvers/resultResolver.test.ts
-
+jest.mock('sequelize', () => {
+  const actual = jest.requireActual('sequelize');
+  class MockModel {
+    static hasMany = jest.fn();
+    static belongsTo = jest.fn();
+    static belongsToMany = jest.fn();
+    static init = jest.fn();
+    static findAll = jest.fn();
+    static findOne = jest.fn();
+    static create = jest.fn();
+    static update = jest.fn();
+    static destroy = jest.fn();
+  }
+  return { ...actual, Model: MockModel };
+});
+jest.mock('../src/models/index', () => ({}));
 jest.mock('../src/models/resultModel');
 jest.mock('../src/models/userModel');
 jest.mock('../src/models/gpModel');
 jest.mock('../src/utils/auth', () => ({
   requireAuth: jest.fn(),
 }));
+import resultResolvers from '../src/graphql/resolvers/resultResolver';
+import Result from '../src/models/resultModel';
+import User from '../src/models/userModel';
+import GP from '../src/models/gpModel';
+import { requireAuth } from '../src/utils/auth';
+
 
 
 const mockContext = { req: { user: { id_user: 123 } } };

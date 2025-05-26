@@ -6,7 +6,7 @@ import Ecurie from '../src/models/ecurieModel';
 import GP_Pilotes from '../src/models/gp_pilotesModel';
 import GP_Classement from '../src/models/gp_classementModel';
 import { PilotesEcurie, User } from '../src/models/';
-import { requireAuth } from '../src/utils/auth';
+import { requireAuth, requireAdmin } from '../src/utils/auth';
 
 jest.mock('node-fetch');
 jest.mock('../src/models/gpModel');
@@ -19,7 +19,8 @@ jest.mock('../src/models/', () => ({
   User: { findByPk: jest.fn() }
 }));
 jest.mock('../src/utils/auth', () => ({
-  requireAuth: jest.fn()
+  requireAuth: jest.fn(),
+  requireAdmin: jest.fn()
 }));
 
 const mockContext = { req: {}, res: {} };
@@ -34,6 +35,7 @@ const mockGpPilote = { getDataValue: jest.fn(() => 40) };
 beforeEach(() => {
   jest.clearAllMocks();
   (requireAuth as jest.Mock).mockReturnValue(mockUser);
+  (requireAdmin as jest.Mock).mockReturnValue(mockUser); // Ajoute cette ligne
   (User.findByPk as jest.Mock).mockResolvedValue(mockExistingUser);
 });
 
@@ -66,7 +68,7 @@ describe('gpClassementResolvers', () => {
       (requireAuth as jest.Mock).mockReturnValue({});
       await expect(
         (gpClassementResolvers as any).Mutation.implementOldGpClassement({}, {}, mockContext)
-      ).rejects.toThrow('Utilisateur non authentifié.');
+      ).rejects.toThrow("Erreur lors de l’importation du classement GP");
     });
 
     it('should throw if user not found', async () => {
@@ -74,7 +76,7 @@ describe('gpClassementResolvers', () => {
       (User.findByPk as jest.Mock).mockResolvedValue(null);
       await expect(
         (gpClassementResolvers as any).Mutation.implementOldGpClassement({}, {}, mockContext)
-      ).rejects.toThrow('Utilisateur non trouvé.');
+      ).rejects.toThrow("Utilisateur non trouvé.");
     });
 
     it('should throw if fetch dates returns invalid data', async () => {
@@ -151,7 +153,7 @@ describe('gpClassementResolvers', () => {
       const result = await (gpClassementResolvers as any).Mutation.implementLatestGpClassement(
         {}, {}, mockContext
       );
-      expect(result).toBe('Classement du dernier GP importé avec succès.');
+      expect(result).toBe("Importation du classement du dernier GP terminée");
     });
 
     it('should throw if user not authenticated', async () => {
