@@ -10,4 +10,18 @@ services:
       - "3000:3000"
     env_file:
       - .env
+    networks:
+      - routing
+      - default
+    labels:     
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.f1-api.rule=Host(`cyan-api.devprod.fr`)'
+      - 'traefik.http.routers.f1-api.entrypoints=websecure'
+      - 'traefik.http.routers.f1-api.tls.certresolver=myresolver'
+ 
 
+networks:
+  routing:
+    external: true
+  default:
+    
