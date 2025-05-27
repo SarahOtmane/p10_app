@@ -6,9 +6,15 @@ import TableManager from './config/tableManager';
 import path from 'path';
 import jwt from 'jsonwebtoken';
 import { MyContext } from './types/context';
+import cors from 'cors';
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 3000;
+
+app.use(cors({
+  origin: ['http://localhost:3001', 'http://localhost:3000', 'https://studio.apollographql.com'],
+  credentials: true
+}));
 
 // JSON body parser
 app.use(express.json());

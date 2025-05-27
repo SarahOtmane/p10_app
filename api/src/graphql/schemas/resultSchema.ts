@@ -13,6 +13,11 @@ const resultTypeDefs = gql`
     getAllResultsOfUser: [Result!]!
     getResultOfUserById(id: Int!): Result
   }
+
+  type Mutation {
+    placeBet(id_pilote: Int!): String
+    updateResultsWithPoints: String
+  }
 `;
 
 export default resultTypeDefs;
