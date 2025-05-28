@@ -83,6 +83,17 @@ Docker & Docker Compose
     SMTP_USER="votre_email@gmail.com"
     SMTP_PASS="votre_mot_de_passe_d_application"
 ```
+3. Installer les dépendances:
+```bash
+    docker run -ti --rm -v $PWD:/app -w /app node:20.17-slim /bin/sh
+    cd api
+    npm install
+    exit
+```
+4. Créer le network
+```bash
+    docker network create routing
+```
 3. Lancer les services avec Docker 
 ```bash
     docker compose up --build
@@ -91,6 +102,7 @@ Docker & Docker Compose
 http://localhost:3000/graphql
 5. Lancer les tests
 ```bash
+    docker compose exec -it node sh
     npm run test
 ```
 
